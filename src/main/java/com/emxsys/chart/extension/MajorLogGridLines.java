@@ -45,6 +45,8 @@ import javafx.scene.shape.Rectangle;
  * Major grid line support for logarithmic charts.
  *
  * @author Bruce Schubert
+ * @param <X>
+ * @param <Y>
  */
 public class MajorLogGridLines<X,Y> {
 
