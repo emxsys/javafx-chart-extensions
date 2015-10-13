@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="369.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.emxsys.demo.FXMLController">
+    <children>
+      <SplitPane dividerPositions="0.29797979797979796" layoutX="110.0" layoutY="93.0" prefHeight="369.0" prefWidth="482.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Accordion layoutX="-44.0" layoutY="169.0" prefHeight="367.0" prefWidth="140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <panes>
+                      <TitledPane animated="false" prefHeight="342.0" prefWidth="158.0" text="Charts">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="180.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <RadioButton fx:id="rbScatterChart" mnemonicParsing="false" text="Scatter Chart">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="chartGroup" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton fx:id="rbLineChart" mnemonicParsing="false" text="Line Chart" toggleGroup="$chartGroup" />
+                                          <Separator prefWidth="200.0" />
+                                          <RadioButton fx:id="rbLogScatterChart" mnemonicParsing="false" text="Log Scatter Chart" toggleGroup="$chartGroup" />
+                                          <RadioButton fx:id="rbLogLineChart" mnemonicParsing="false" text="Log Line Chart" toggleGroup="$chartGroup" />
+                                          <Separator prefWidth="200.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                      <TitledPane animated="false" text="Options">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="316.0" prefWidth="138.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <CheckBox mnemonicParsing="false" text="Subtitles" />
+                                          <CheckBox mnemonicParsing="false" text="Markers" />
+                                          <CheckBox mnemonicParsing="false" text="Text Annotations" />
+                                          <CheckBox mnemonicParsing="false" text="Image Annotations" />
+                                          <CheckBox mnemonicParsing="false" text="Line Annotations" />
+                                          <CheckBox mnemonicParsing="false" text="Polygon Annotations" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                    </panes>
+                  </Accordion>
+               </children>
+            </AnchorPane>
+          <AnchorPane fx:id="chartPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+        </items>
+      </SplitPane>
+    </children>
+</AnchorPane>

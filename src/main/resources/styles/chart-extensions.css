@@ -1,0 +1,43 @@
+.chart-subtitle {
+    -fx-font-size: 1.0em;
+}
+
+.chart-marker-line {
+    -fx-stroke-width: 0.5;
+    -fx-stroke: black;
+}
+
+.chart-marker-label {
+    -fx-font-size: 1.0em;
+    -fx-text-alignment: center;    
+}
+
+.chart-annotation-text {
+    -fx-font-size: 1.0em;
+    -fx-text-alignment: center;    
+}
+
+.chart-annotation-image {
+}
+
+.chart-annotation-line {
+    -fx-stroke-width: 1.0;
+    -fx-stroke: black;
+}
+
+.chart-annotation-polygon {
+    -fx-stroke-width: 1;
+    -fx-stroke: black;
+    -fx-fill: transparent;
+}
+
+.chart-major-vertical-grid-lines {
+    -fx-stroke: #dddddd;
+    -fx-stroke-width: 1.5;
+}
+
+.chart-major-horizontal-grid-lines {
+    -fx-stroke: #dddddd;
+    -fx-stroke-width: 1.5;
+}
+
