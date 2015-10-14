@@ -29,11 +29,9 @@
  */
 package com.emxsys.chart.extension;
 
-import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
-import javafx.scene.text.TextAlignment;
 
 /**
  *
