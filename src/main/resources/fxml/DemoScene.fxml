@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -36,18 +37,18 @@
                               </AnchorPane>
                         </content>
                       </TitledPane>
-                      <TitledPane animated="false" text="Options">
+                      <TitledPane animated="false" text="Extensions">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <VBox prefHeight="316.0" prefWidth="138.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefHeight="316.0" prefWidth="138.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <CheckBox mnemonicParsing="false" text="Subtitles" />
-                                          <CheckBox mnemonicParsing="false" text="Markers" />
-                                          <CheckBox mnemonicParsing="false" text="Text Annotations" />
-                                          <CheckBox mnemonicParsing="false" text="Image Annotations" />
-                                          <CheckBox mnemonicParsing="false" text="Line Annotations" />
-                                          <CheckBox mnemonicParsing="false" text="Polygon Annotations" />
+                                          <CheckBox fx:id="cbSubtitles" mnemonicParsing="false" text="Subtitles" />
+                                          <CheckBox fx:id="cbMarkers" mnemonicParsing="false" text="Markers" />
+                                          <CheckBox fx:id="cbTextAnnotations" mnemonicParsing="false" text="Text Annotations" />
+                                          <CheckBox fx:id="cbImageAnnotations" mnemonicParsing="false" text="Image Annotations" />
+                                          <CheckBox fx:id="cbLineAnnotations" mnemonicParsing="false" text="Line Annotations" />
+                                          <CheckBox fx:id="cbPolygonAnnotations" mnemonicParsing="false" text="Polygon Annotations" />
                                        </children>
                                     </VBox>
                                  </children>
