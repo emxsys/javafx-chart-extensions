@@ -31,6 +31,8 @@ package com.emxsys.chart.extension;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
@@ -42,30 +44,45 @@ import javafx.scene.shape.Line;
 public class ValueMarker {
 
     private final DoubleProperty value = new SimpleDoubleProperty();
+    private final Group group = new Group();
     private final Line line = new Line();
     private final Label label = new Label();
+    private Pos textAnchor = Pos.TOP_LEFT;
 
     /**
-     * Constructs a marker line drawn at the given value. 
+     * Constructs a marker line drawn at the given value.
+     *
      * @param value
      */
     public ValueMarker(double value) {
-        this(value,null);
+        this(value, null);
     }
 
     /**
-     * Constructs a marker line drawn at the given value. 
+     * Constructs a marker line drawn at the given value.
+     *
      * @param value
      * @param text
      */
     public ValueMarker(double value, String text) {
+        this(value, text, Pos.TOP_LEFT);
+    }
+    /**
+     * Constructs a marker line drawn at the given value.
+     *
+     * @param value
+     * @param text
+     * @param textAnchor
+     */
+    public ValueMarker(double value, String text, Pos textAnchor) {
         setValue(value);
         this.label.setText(text);
         this.line.getStyleClass().add("chart-marker-line");
         this.line.getStyleClass().add("chart-marker-label");
+        this.group.getChildren().addAll(line, label);
+        this.textAnchor = textAnchor;
     }
 
-    
     public double getValue() {
         return value.get();
     }
@@ -86,8 +103,16 @@ public class ValueMarker {
         label.setText(text);
     }
 
-    public Node getNode() {
-        return line;
+    public Group getNode() {
+        return group;
+    }
+
+    public Pos getTextAnchor() {
+        return textAnchor;
+    }
+
+    public void setTextAnchor(Pos textAnchor) {
+        this.textAnchor = textAnchor;
     }
 
 }

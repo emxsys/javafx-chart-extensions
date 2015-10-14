@@ -34,9 +34,11 @@ import java.util.Objects;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
 
 /**
@@ -47,10 +49,12 @@ import javafx.scene.shape.Line;
  */
 public final class XYMarkers<X, Y> {
 
-    private final XYChart chart;
+    private final XYChart<X, Y> chart;
     private final ObservableList<Node> plotChildren;
     private final ObservableList<ValueMarker> rangeMarkers;
     private final ObservableList<ValueMarker> domainMarkers;
+
+    private Pos textAnchor = Pos.CENTER;
 
     public XYMarkers(XYChart chart, ObservableList<Node> plotChildren) {
         this.chart = chart;
@@ -80,7 +84,7 @@ public final class XYMarkers<X, Y> {
     }
 
     public void clearRangeMarkers() {
-        
+
         for (ValueMarker marker : rangeMarkers) {
             plotChildren.remove(marker.getNode());
         }
@@ -133,7 +137,7 @@ public final class XYMarkers<X, Y> {
         //super.layoutPlotChildren();
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();
         ValueAxis yAxis = (ValueAxis) chart.getYAxis();
-        for (ValueMarker verticalMarker : domainMarkers) {
+        for (ValueMarker marker : domainMarkers) {
 
             // Determine the line height
             double lower = yAxis.getLowerBound();
@@ -141,11 +145,13 @@ public final class XYMarkers<X, Y> {
             double upper = yAxis.getUpperBound();
             Y upperY = (Y) yAxis.toRealValue(upper);
             // Determine the placement of the line
-            Line line = (Line) verticalMarker.getNode();
+            Line line = (Line) marker.getNode().getChildren().get(0);
             line.setStartY(yAxis.getDisplayPosition(lowerY));
             line.setEndY(yAxis.getDisplayPosition(upperY));
-            line.setStartX(xAxis.getDisplayPosition(verticalMarker.getValue()));
+            line.setStartX(xAxis.getDisplayPosition(marker.getValue()));
             line.setEndX(line.getStartX());
+            
+            layoutText((Label) marker.getNode().getChildren().get(1), marker.getTextAnchor(), line);
         }
     }
 
@@ -153,18 +159,60 @@ public final class XYMarkers<X, Y> {
         //super.layoutPlotChildren();
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();
         ValueAxis yAxis = (ValueAxis) chart.getYAxis();
-        for (ValueMarker horizontalMarker : rangeMarkers) {
+        for (ValueMarker marker : rangeMarkers) {
             // Determine the width
             double lower = xAxis.getLowerBound();
             X lowerX = (X) xAxis.toRealValue(lower);
             double upper = xAxis.getUpperBound();
             X upperX = (X) xAxis.toRealValue(upper);
             // Determine the placement
-            Line line = (Line) horizontalMarker.getNode();
+            Line line = (Line) marker.getNode().getChildren().get(0);
             line.setStartX(xAxis.getDisplayPosition(lowerX));
             line.setEndX(xAxis.getDisplayPosition(upperX));
-            line.setStartY(yAxis.getDisplayPosition(horizontalMarker.getValue()));
+            line.setStartY(yAxis.getDisplayPosition(marker.getValue()));
             line.setEndY(line.getStartY());
+            
+            layoutText((Label) marker.getNode().getChildren().get(1), marker.getTextAnchor(), line);
+        }
+    }
+
+    void layoutText(Label label, Pos textAnchor, Line line) {
+
+//        label.setLayoutY(yAxis.getDisplayPosition(y));
+//        label.setLayoutX(xAxis.getDisplayPosition(x));
+        switch (textAnchor) {
+            case TOP_CENTER:
+            case CENTER:
+            case BOTTOM_CENTER:
+                label.setLayoutX(line.getStartX() + ((line.getEndX() - line.getStartX()) / 2) - (label.getWidth() / 2));
+                break;
+            case TOP_LEFT:
+            case CENTER_LEFT:
+            case BOTTOM_LEFT:
+                label.setLayoutX(line.getStartX());
+                break;
+            case TOP_RIGHT:
+            case CENTER_RIGHT:
+            case BOTTOM_RIGHT:
+                label.setLayoutX(line.getEndX() - label.getWidth());
+                break;
+        }
+        switch (textAnchor) {
+            case CENTER:
+            case CENTER_LEFT:
+            case CENTER_RIGHT:
+                label.setLayoutY(line.getStartY() + ((line.getEndY() - line.getStartY()) / 2) - (label.getHeight() / 2));
+                break;
+            case TOP_LEFT:
+            case TOP_CENTER:
+            case TOP_RIGHT:
+                label.setLayoutY(line.getEndY() - label.getHeight());
+                break;
+            case BOTTOM_LEFT:
+            case BOTTOM_CENTER:
+            case BOTTOM_RIGHT:
+                label.setLayoutY(line.getStartY());
+                break;
         }
     }
 

@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.NumberAxis;
@@ -131,10 +132,10 @@ public class FXMLController implements Initializable {
                     avgX = totalX / numItems;
                     avgY = totalY / numItems;
 
-                    ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(avgX, "Average"));
-                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, "Minimum"));
-                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, "Maximum"));
-                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, "Average"));
+                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, "Maximum", Pos.TOP_RIGHT));
+                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, "Minimum", Pos.BOTTOM_LEFT));
+                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, "Average", Pos.CENTER));
+                    ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(avgX, "Average", Pos.TOP_LEFT));
                 } else {
                     ((MarkerExtension) chart).getMarkers().clearDomainMarkers();
                     ((MarkerExtension) chart).getMarkers().clearRangeMarkers();
