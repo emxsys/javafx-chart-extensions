@@ -74,6 +74,10 @@ public class Subtitle {
         this.legend = legend;
     }
 
+    public String getSubtitle() {
+        return this.subtitle;
+    }
+
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
         this.subtitleLabel.setText(subtitle);

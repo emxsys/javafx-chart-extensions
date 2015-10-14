@@ -12,7 +12,7 @@
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *
- *     - Neither the name of Bruce Schubert,  nor the names of its 
+ *     - Neither the name of Bruce Schubert, Emxsys nor the names of its 
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -29,65 +29,14 @@
  */
 package com.emxsys.chart.extension;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.shape.Line;
-
 /**
  *
  * @author Bruce Schubert
  */
-public class ValueMarker {
+public interface SubtitleExtension {
 
-    private final DoubleProperty value = new SimpleDoubleProperty();
-    private final Line line = new Line();
-    private final Label label = new Label();
+    String getSubtitle();
 
-    /**
-     * Constructs a marker line drawn at the given value. 
-     * @param value
-     */
-    public ValueMarker(double value) {
-        this(value,null);
-    }
-
-    /**
-     * Constructs a marker line drawn at the given value. 
-     * @param value
-     * @param text
-     */
-    public ValueMarker(double value, String text) {
-        setValue(value);
-        this.label.setText(text);
-        this.line.getStyleClass().add("chart-marker-line");
-        this.line.getStyleClass().add("chart-marker-label");
-    }
-
-    
-    public double getValue() {
-        return value.get();
-    }
-
-    public void setValue(double value) {
-        this.value.set(value);
-    }
-
-    public DoubleProperty valueProperty() {
-        return value;
-    }
-
-    public String getLabel() {
-        return label.getText();
-    }
-
-    public void setLabel(String text) {
-        label.setText(text);
-    }
-
-    public Node getNode() {
-        return line;
-    }
+    void setSubtitle(String subtitle);
 
 }

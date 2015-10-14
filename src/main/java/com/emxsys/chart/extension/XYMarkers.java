@@ -45,14 +45,14 @@ import javafx.scene.shape.Line;
  * @param <X>
  * @param <Y>
  */
-public final class Markers<X, Y> {
+public final class XYMarkers<X, Y> {
 
     private final XYChart chart;
     private final ObservableList<Node> plotChildren;
     private final ObservableList<ValueMarker> rangeMarkers;
     private final ObservableList<ValueMarker> domainMarkers;
 
-    public Markers(XYChart chart, ObservableList<Node> plotChildren) {
+    public XYMarkers(XYChart chart, ObservableList<Node> plotChildren) {
         this.chart = chart;
         this.plotChildren = plotChildren;
 
