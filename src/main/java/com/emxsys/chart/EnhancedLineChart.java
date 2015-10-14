@@ -29,9 +29,11 @@
  */
 package com.emxsys.chart;
 
-import com.emxsys.chart.extension.XYAnnotations;
-import com.emxsys.chart.extension.Markers;
+import com.emxsys.chart.extension.MarkerExtension;
 import com.emxsys.chart.extension.Subtitle;
+import com.emxsys.chart.extension.SubtitleExtension;
+import com.emxsys.chart.extension.XYAnnotations;
+import com.emxsys.chart.extension.XYMarkers;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,10 +47,11 @@ import javafx.scene.chart.LineChart;
  * @param <X>
  * @param <Y>
  */
-public class EnhancedLineChart<X, Y> extends LineChart<X, Y> {
+public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
+        implements SubtitleExtension, MarkerExtension {
 
     private Subtitle subtitle;
-    private Markers<X,Y> markers;
+    private XYMarkers<X, Y> markers;
     private XYAnnotations annotations;
 
     public EnhancedLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
@@ -60,17 +63,23 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y> {
         super(xAxis, yAxis, data);
 
         subtitle = new Subtitle(this, getChildren(), getLegend());
-        markers = new Markers<>(this, getPlotChildren());
+        markers = new XYMarkers<>(this, getPlotChildren());
         annotations = new XYAnnotations(this, getChartChildren(), getPlotChildren());
     }
 
+    @Override
+    public String getSubtitle() {
+        return this.subtitle.getSubtitle();
+    }
+
+    /**
+     *
+     * @param subtitle Subtitle text; may be null.
+     */
+    @Override
     public void setSubtitle(String subtitle) {
         this.subtitle.setSubtitle(subtitle);
         this.requestLayout();
-    }
-
-    public Markers getMarkers() {
-        return this.markers;
     }
 
     public XYAnnotations getAnnotations() {
@@ -78,9 +87,13 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y> {
     }
 
     @Override
+    public XYMarkers<X, Y> getMarkers() {
+        return this.markers;
+    }
+
+    @Override
     protected void layoutChildren() {
         super.layoutChildren();
-
         subtitle.layoutChildren();
     }
 
