@@ -4,7 +4,7 @@ import com.emxsys.chart.EnhancedLineChart;
 import com.emxsys.chart.EnhancedScatterChart;
 import com.emxsys.chart.LogLineChart;
 import com.emxsys.chart.LogScatterChart;
-import com.emxsys.chart.axis.LogarithmicAxis;
+import com.emxsys.chart.extension.LogarithmicAxis;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;

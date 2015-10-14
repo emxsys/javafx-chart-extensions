@@ -27,36 +27,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.emxsys.chart.axis;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+package com.emxsys.chart.extension;
 
 
 /**
  *
+ * Immutable.
+ *
  * @author Bruce Schubert
  */
-public class NumberTickUnit extends TickUnit {
+public abstract class TickUnit implements Comparable {
 
-    private final DecimalFormat defaultFormatter = new DecimalFormat("0.00");
-    private NumberFormat formatter;
+    /**
+     * The size of the tick unit.
+     */
+    private double size;
+    /**
+     * The number of minor tick units between major units. The default value established in
+     * ValueAxis is 5, which is the number is minor subdivisions within the major unit.
+     */
+    private int minorTickCount;
 
 
-    public NumberTickUnit() {
-        this(1, null, 9);
+    public TickUnit() {
+        this(1, 9);
     }
 
 
-    public NumberTickUnit(double size) {
-        this(size, null, 9);
+    public TickUnit(double size) {
+        this(size, 9);
     }
 
 
     // Compatible with JFree signature
-    public NumberTickUnit(double size, NumberFormat formatter, int minorTickCount) {
-        super(size, minorTickCount);
-        this.formatter = formatter;
+    public TickUnit(double size, int minorTickCount) {
+        this.size = size;
+        this.minorTickCount = minorTickCount;
+    }
+
+
+    public double getSize() {
+        return size;
+    }
+
+
+    public int getMinorTickCount() {
+        return minorTickCount;
     }
 
 
@@ -66,12 +82,47 @@ public class NumberTickUnit extends TickUnit {
      * @param value The value to format into a tick label string
      * @return A formatted string for the given value
      */
+    public abstract String getTickMarkLabel(Number value);
+
+
     @Override
-    public String getTickMarkLabel(Number value) {
-        if (formatter == null) {
-            formatter = defaultFormatter;
+    public int compareTo(Object obj) {
+        if (this.equals(obj)) {
+            return 0;
         }
-        return formatter.format(value);
+        final TickUnit other = (TickUnit) obj;
+        if (this.getSize() < other.getSize()) {
+            return -1;
+        }
+        if (this.getSize() > other.getSize()) {
+            return 1;
+        }
+        return 0;
+    }
+
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (int) (Double.doubleToLongBits(this.size) ^ (Double.doubleToLongBits(this.size) >>> 32));
+        hash = 67 * hash + this.minorTickCount;
+        return hash;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TickUnit other = (TickUnit) obj;
+        if (this.size != other.size) {
+            return false;
+        }
+        return this.minorTickCount == other.minorTickCount;
     }
 
 }

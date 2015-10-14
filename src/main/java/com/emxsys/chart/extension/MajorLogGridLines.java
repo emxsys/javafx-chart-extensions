@@ -29,7 +29,6 @@
  */
 package com.emxsys.chart.extension;
 
-import com.emxsys.chart.axis.LogarithmicAxis;
 import java.util.Iterator;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
