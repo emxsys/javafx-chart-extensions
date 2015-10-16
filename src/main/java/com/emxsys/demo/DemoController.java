@@ -32,7 +32,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author Bruce Schubert
  */
-public class FXMLController implements Initializable {
+public class DemoController implements Initializable {
 
     @FXML
     AnchorPane chartPane;
@@ -94,14 +94,14 @@ public class FXMLController implements Initializable {
             }
         });
 
-        // Handle subtitle 
+        // Handle Subtitle checkbox
         cbSubtitles.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (chart instanceof SubtitleExtension) {
                 ((SubtitleExtension) chart).setSubtitle(newValue ? "Subtitle" : null);
             }
         });
 
-        // Handle markers
+        // Handle Markers checkbox
         cbMarkers.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (chart instanceof MarkerExtension) {
                 if (newValue) {
@@ -132,14 +132,15 @@ public class FXMLController implements Initializable {
                     avgX = totalX / numItems;
                     avgY = totalY / numItems;
 
-                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, "Maximum", Pos.TOP_RIGHT));
-                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, "Minimum", Pos.BOTTOM_LEFT));
-                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, "Average", Pos.CENTER));
-                    ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(avgX, "Average", Pos.TOP_LEFT));
+                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Min: %1$.1f", minY), Pos.TOP_LEFT));
+                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, String.format("Series 1 Avg: %1$.1f", avgY), Pos.TOP_CENTER));
+                    ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Max: %1$.1f", maxY), Pos.BOTTOM_LEFT));
+                    //((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(avgX, "Avg Domain", Pos.TOP_LEFT));
                 } else {
                     ((MarkerExtension) chart).getMarkers().clearDomainMarkers();
                     ((MarkerExtension) chart).getMarkers().clearRangeMarkers();
                 }
+                chart.requestLayout();
             }
         });
 
