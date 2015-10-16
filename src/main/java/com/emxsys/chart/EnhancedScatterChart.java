@@ -90,7 +90,6 @@ public class EnhancedScatterChart<X, Y> extends ScatterChart<X, Y>
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
-
         subtitle.layoutChildren();
     }
 
