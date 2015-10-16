@@ -31,11 +31,15 @@ package com.emxsys.chart.extension;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
+
 
 /**
  *
@@ -49,6 +53,7 @@ public class ValueMarker {
     private final Label label = new Label();
     private Pos textAnchor = Pos.TOP_LEFT;
 
+
     /**
      * Constructs a marker line drawn at the given value.
      *
@@ -57,6 +62,7 @@ public class ValueMarker {
     public ValueMarker(double value) {
         this(value, null);
     }
+
 
     /**
      * Constructs a marker line drawn at the given value.
@@ -67,6 +73,8 @@ public class ValueMarker {
     public ValueMarker(double value, String text) {
         this(value, text, Pos.TOP_LEFT);
     }
+
+
     /**
      * Constructs a marker line drawn at the given value.
      *
@@ -75,44 +83,129 @@ public class ValueMarker {
      * @param textAnchor
      */
     public ValueMarker(double value, String text, Pos textAnchor) {
-        setValue(value);
+        this.value.set(value);
         this.label.setText(text);
-        this.line.getStyleClass().add("chart-marker-line");
-        this.line.getStyleClass().add("chart-marker-label");
-        this.group.getChildren().addAll(line, label);
         this.textAnchor = textAnchor;
+        this.line.getStyleClass().add("chart-marker-line");
+        this.label.getStyleClass().add("chart-marker-label");
+        this.label.applyCss();
+        this.group.getChildren().addAll(line, label);
+        this.label.widthProperty().addListener((observable) -> layoutText());
+        this.label.heightProperty().addListener((observable) -> layoutText());
+
     }
+
 
     public double getValue() {
         return value.get();
     }
 
+
     public void setValue(double value) {
         this.value.set(value);
     }
+
 
     public DoubleProperty valueProperty() {
         return value;
     }
 
+
     public String getLabel() {
         return label.getText();
     }
+
 
     public void setLabel(String text) {
         label.setText(text);
     }
 
+
     public Group getNode() {
         return group;
     }
+
 
     public Pos getTextAnchor() {
         return textAnchor;
     }
 
+
     public void setTextAnchor(Pos textAnchor) {
         this.textAnchor = textAnchor;
+    }
+
+
+    void layoutDomainMarker(ValueAxis xAxis, ValueAxis yAxis) {
+
+        // Determine the line height
+        double lower = yAxis.getLowerBound();
+        Number lowerY = yAxis.toRealValue(lower);
+        double upper = yAxis.getUpperBound();
+        Number upperY = yAxis.toRealValue(upper);
+        // Establish the placement of the line
+        line.setStartY(yAxis.getDisplayPosition(lowerY));
+        line.setEndY(yAxis.getDisplayPosition(upperY));
+        line.setStartX(xAxis.getDisplayPosition(getValue()));
+        line.setEndX(line.getStartX());
+        // Layout the text base on the line
+        layoutText();
+
+    }
+
+
+    void layoutRangeMarker(ValueAxis xAxis, ValueAxis yAxis) {
+
+        // Determine the line width
+        double lower = xAxis.getLowerBound();
+        Number lowerX = xAxis.toRealValue(lower);
+        double upper = xAxis.getUpperBound();
+        Number upperX = xAxis.toRealValue(upper);
+        // Establish the line placement
+        line.setStartX(xAxis.getDisplayPosition(lowerX));
+        line.setEndX(xAxis.getDisplayPosition(upperX));
+        line.setStartY(yAxis.getDisplayPosition(getValue()));
+        line.setEndY(line.getStartY());
+        // Layout the text based on the line placement
+        layoutText();
+    }
+
+
+    void layoutText() {
+        switch (textAnchor) {
+            case TOP_CENTER:
+            case CENTER:
+            case BOTTOM_CENTER:
+                label.setLayoutX(line.getStartX() + ((line.getEndX() - line.getStartX()) / 2) - (label.getWidth() / 2));
+                break;
+            case TOP_LEFT:
+            case CENTER_LEFT:
+            case BOTTOM_LEFT:
+                label.setLayoutX(line.getStartX());
+                break;
+            case TOP_RIGHT:
+            case CENTER_RIGHT:
+            case BOTTOM_RIGHT:
+                label.setLayoutX(line.getEndX() - label.getWidth());
+                break;
+        }
+        switch (textAnchor) {
+            case CENTER:
+            case CENTER_LEFT:
+            case CENTER_RIGHT:
+                label.setLayoutY(line.getStartY() + ((line.getEndY() - line.getStartY()) / 2) - (label.getHeight() / 2));
+                break;
+            case TOP_LEFT:
+            case TOP_CENTER:
+            case TOP_RIGHT:
+                label.setLayoutY(line.getEndY() - label.getHeight());
+                break;
+            case BOTTOM_LEFT:
+            case BOTTOM_CENTER:
+            case BOTTOM_RIGHT:
+                label.setLayoutY(line.getStartY());
+                break;
+        }
     }
 
 }
