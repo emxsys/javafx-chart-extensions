@@ -29,6 +29,7 @@
  */
 package com.emxsys.chart.extension;
 
+import java.util.Objects;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.shape.Line;
+
 
 /**
  *
@@ -62,7 +64,9 @@ public class XYAnnotations {
     private final ObservableList<XYImageAnnotation> images;
     private final ObservableList<XYPolygonAnnotation> polygons;
 
-    public XYAnnotations(XYChart chart, ObservableList<Node> chartChildren, ObservableList<Node> plotChildren) {
+
+    public XYAnnotations(XYChart chart, ObservableList<Node> chartChildren,
+        ObservableList<Node> plotChildren) {
         this.chart = chart;
         this.chartChildren = chartChildren;
         this.plotChildren = plotChildren;
@@ -78,7 +82,12 @@ public class XYAnnotations {
         plotContent = (Group) plotArea.getChildren().get(plotContentIndex);
         plotArea.getChildren().add(plotContentIndex + 1, foreground);
         plotArea.getChildren().add(0, background);
-//        plotArea.getChildren().add(plotContentIndex, background);
+        
+        // Sync the foreground and background layout to the plotContent
+        foreground.layoutXProperty().bind(plotContent.layoutXProperty());
+        foreground.layoutYProperty().bind(plotContent.layoutYProperty());
+        background.layoutXProperty().bind(plotContent.layoutXProperty());
+        background.layoutYProperty().bind(plotContent.layoutYProperty());
 
         // Create lists that notify on changes
         texts = FXCollections.observableArrayList();
@@ -93,23 +102,47 @@ public class XYAnnotations {
         polygons.addListener((InvalidationListener) observable -> layoutPolygons());
     }
 
+
     public void add(XYTextAnnotation annotation, Layer backgroundOrForeground) {
         Group layer = backgroundOrForeground == Layer.BACKGROUND ? background : foreground;
         layer.getChildren().add(annotation.getNode());
         this.texts.add(annotation);
     }
 
+
     public void add(XYLineAnnotation annotation, Layer backgroundOrForeground) {
         Group layer = backgroundOrForeground == Layer.BACKGROUND ? background : foreground;
         layer.getChildren().add(annotation.getNode());
         this.lines.add(annotation);
+
+        this.plotContent.requestLayout();
     }
+
+
+    public void remove(XYLineAnnotation annotation, Layer backgroundOrForeground) {
+        Objects.requireNonNull(annotation, getClass().getSimpleName() + ": annotation must not be null");
+        if (annotation.getNode() != null) {
+            Group layer = backgroundOrForeground == Layer.BACKGROUND ? background : foreground;
+            layer.getChildren().remove(annotation.getNode());
+        }
+        lines.remove(annotation);
+    }
+    
+    public void clearLineAnnotations(Layer backgroundOrForeground) {
+        Group layer = backgroundOrForeground == Layer.BACKGROUND ? background : foreground;
+        for (XYLineAnnotation annotation : lines) {
+            layer.getChildren().remove(annotation.getNode());
+        }
+        lines.clear();
+    }
+
 
     public void add(XYImageAnnotation annotation, Layer backgroundOrForeground) {
         Group layer = backgroundOrForeground == Layer.BACKGROUND ? background : foreground;
         layer.getChildren().add(annotation.getNode());
         this.images.add(annotation);
     }
+
 
     public void add(XYPolygonAnnotation annotation, Layer backgroundOrForeground) {
         Group layer = backgroundOrForeground == Layer.BACKGROUND ? background : foreground;
@@ -118,18 +151,15 @@ public class XYAnnotations {
 
     }
 
-    public void layoutAnnotations() {
-        background.setLayoutX(plotContent.getLayoutX());
-        background.setLayoutY(plotContent.getLayoutY());
 
-        foreground.setLayoutX(plotContent.getLayoutX());
-        foreground.setLayoutY(plotContent.getLayoutY());
+    public void layoutAnnotations() {
 
         layoutPolygons();
         layoutLines();
         layoutImages();
         layoutTexts();
     }
+
 
     private void layoutTexts() {
 
@@ -140,6 +170,7 @@ public class XYAnnotations {
         }
     }
 
+
     private void layoutLines() {
 
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();
@@ -149,6 +180,7 @@ public class XYAnnotations {
         }
     }
 
+
     private void layoutImages() {
 
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();
@@ -157,6 +189,7 @@ public class XYAnnotations {
             annotation.layoutImage(xAxis, yAxis);
         }
     }
+
 
     private void layoutPolygons() {
 

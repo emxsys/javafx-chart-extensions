@@ -31,11 +31,8 @@ package com.emxsys.chart.extension;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
@@ -89,10 +86,11 @@ public class ValueMarker {
         this.line.getStyleClass().add("chart-marker-line");
         this.label.getStyleClass().add("chart-marker-label");
         this.label.applyCss();
-        this.group.getChildren().addAll(line, label);
+
         this.label.widthProperty().addListener((observable) -> layoutText());
         this.label.heightProperty().addListener((observable) -> layoutText());
 
+        this.group.getChildren().addAll(line, label);
     }
 
 

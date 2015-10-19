@@ -29,11 +29,14 @@
  */
 package com.emxsys.chart;
 
+import com.emxsys.chart.extension.AnnotationExtension;
 import com.emxsys.chart.extension.MarkerExtension;
 import com.emxsys.chart.extension.Subtitle;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYMarkers;
+import java.util.Timer;
+import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,7 +51,7 @@ import javafx.scene.chart.LineChart;
  * @param <Y>
  */
 public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
-        implements SubtitleExtension, MarkerExtension {
+        implements SubtitleExtension, MarkerExtension,  AnnotationExtension  {
 
     private Subtitle subtitle;
     private XYMarkers<X, Y> markers;
@@ -82,6 +85,7 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
         this.requestLayout();
     }
 
+    @Override
     public XYAnnotations getAnnotations() {
         return this.annotations;
     }
@@ -94,7 +98,7 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
-        subtitle.layoutChildren();
+        subtitle.layoutSubtitles();
     }
 
     @Override

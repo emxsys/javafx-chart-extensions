@@ -47,7 +47,7 @@ public class LogLineChart<X, Y> extends EnhancedLineChart<X, Y> {
     private MajorLogGridLines<X,Y> gridlines;
 
     /**
-     * Constructs a logarithmic scatter chart.
+     * Constructs a logarithmic line chart.
      *
      * @param xAxis
      * @param yAxis
@@ -57,7 +57,7 @@ public class LogLineChart<X, Y> extends EnhancedLineChart<X, Y> {
     }
 
     /**
-     * Constructs a logarithmic scatter chart.
+     * Constructs a logarithmic line chart.
      *
      * @param xAxis
      * @param yAxis
