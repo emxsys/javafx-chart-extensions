@@ -9,10 +9,14 @@ import com.emxsys.chart.extension.LogarithmicAxis;
 import com.emxsys.chart.extension.MarkerExtension;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.ValueMarker;
+import com.emxsys.chart.extension.XYAnnotation;
 import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
 import com.emxsys.chart.extension.XYLineAnnotation;
+import com.emxsys.chart.extension.XYPolygonAnnotation;
+import com.emxsys.chart.extension.XYTextAnnotation;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -34,6 +38,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 
 /**
@@ -67,6 +72,10 @@ public class DemoController implements Initializable {
 
     private XYChart chart;
 
+    private ArrayList<XYAnnotation> polygons = new ArrayList<>();
+    private ArrayList<XYAnnotation> lines = new ArrayList<>();
+    private ArrayList<XYAnnotation> text = new ArrayList<>();
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -75,6 +84,7 @@ public class DemoController implements Initializable {
         chartGroup.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
             chartPane.getChildren().clear();
 
+            // Create the selected chart
             RadioButton rb1 = (RadioButton) newValue;
             switch (rb1.getId()) {
                 case "rbScatterChart":
@@ -94,9 +104,13 @@ public class DemoController implements Initializable {
                     throw new IllegalStateException("unhandled radiobutton:" + rb1.getId());
             }
             chartPane.getChildren().add(fitToParent(chart));
+
+            // Show the selected extensions
             initSubtitle(cbSubtitles.isSelected());
+            initPolygonAnnotations(cbPolygonAnnotations.isSelected());
+            initLineAnnotations(cbLineAnnotations.isSelected());
+            initTextAnnotations(cbTextAnnotations.isSelected());
             initMarkers(cbMarkers.isSelected());
-            initLineAnnotation(cbLineAnnotations.isSelected());
         });
 
         // Handle Subtitle checkbox
@@ -109,8 +123,16 @@ public class DemoController implements Initializable {
             initMarkers(newValue);
         });
         // Handle Line Annotation checkbox
+        cbTextAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            initTextAnnotations(newValue);
+        });
+        // Handle Line Annotation checkbox
         cbLineAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            initLineAnnotation(newValue);
+            initLineAnnotations(newValue);
+        });
+        // Handle Polygon Annotation checkbox
+        cbPolygonAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            initPolygonAnnotations(newValue);
         });
     }
 
@@ -122,17 +144,22 @@ public class DemoController implements Initializable {
     }
 
 
-    private void initLineAnnotation(Boolean enabled) {
+    /**
+     * Shows or hides the line annotations.
+     *
+     * @param enabled True to show, false to hide.
+     */
+    private void initLineAnnotations(Boolean enabled) {
         if (chart instanceof AnnotationExtension) {
             if (enabled) {
+
                 ValueAxis xAxis = (ValueAxis) chart.getXAxis();
                 ValueAxis yAxis = (ValueAxis) chart.getYAxis();
-                ((AnnotationExtension) chart).getAnnotations().add(
-                    new XYLineAnnotation(
-                        xAxis.getLowerBound(), yAxis.getLowerBound(),
-                        xAxis.getUpperBound(), yAxis.getUpperBound(),
-                        2.0,
-                        Color.RED),
+                ((AnnotationExtension) chart).getAnnotations().add(new XYLineAnnotation(
+                    xAxis.getUpperBound(), yAxis.getLowerBound(),
+                    xAxis.getLowerBound(), yAxis.getUpperBound(),
+                    2.0,
+                    Color.RED),
                     Layer.BACKGROUND);
                 chart.requestLayout();
             }
@@ -143,6 +170,78 @@ public class DemoController implements Initializable {
     }
 
 
+    /**
+     * Shows or hides text annotations.
+     *
+     * @param enabled True to show, false to hide.
+     */
+    private void initTextAnnotations(Boolean enabled) {
+        if (chart instanceof AnnotationExtension) {
+            if (enabled) {
+                ValueAxis xAxis = (ValueAxis) chart.getXAxis();
+                ValueAxis yAxis = (ValueAxis) chart.getYAxis();
+                
+                ((AnnotationExtension) chart).getAnnotations().add(new XYTextAnnotation(
+                    "Text on Background", xAxis.getLowerBound(), yAxis.getUpperBound(), Pos.TOP_LEFT),
+                    Layer.BACKGROUND);
+
+                ((AnnotationExtension) chart).getAnnotations().add(new XYTextAnnotation(
+                    "Text on Foreground", xAxis.getUpperBound(), yAxis.getLowerBound(), Pos.BOTTOM_RIGHT),
+                    Layer.FOREGROUND);
+
+                chart.requestLayout();
+            }
+            else {
+                ((AnnotationExtension) chart).getAnnotations().clearTextAnnotations(Layer.BACKGROUND);
+                ((AnnotationExtension) chart).getAnnotations().clearTextAnnotations(Layer.FOREGROUND);
+            }
+        }
+    }
+
+
+    /**
+     * Shows or hides polygon annotations.
+     *
+     * @param enabled True to show, false to hide.
+     */
+    private void initPolygonAnnotations(Boolean enabled) {
+        if (chart instanceof AnnotationExtension) {
+            if (enabled) {
+                ValueAxis xAxis = (ValueAxis) chart.getXAxis();
+                ValueAxis yAxis = (ValueAxis) chart.getYAxis();
+
+                ((AnnotationExtension) chart).getAnnotations().add(new XYPolygonAnnotation(new double[]{
+                    xAxis.getLowerBound(), yAxis.getLowerBound(),
+                    xAxis.getUpperBound(), yAxis.getUpperBound(),
+                    xAxis.getLowerBound(), yAxis.getUpperBound()},
+                    2.0,
+                    Color.BLACK,
+                    Color.DARKORANGE),
+                    Layer.BACKGROUND);
+
+                ((AnnotationExtension) chart).getAnnotations().add(new XYPolygonAnnotation(new double[]{
+                    xAxis.getLowerBound(), yAxis.getLowerBound(),
+                    xAxis.getUpperBound(), yAxis.getUpperBound(),
+                    xAxis.getUpperBound(), yAxis.getLowerBound()},
+                    2.0,
+                    Color.BLACK,
+                    new Color(0, 1, 0, 0.3)),
+                    Layer.FOREGROUND);
+
+                chart.requestLayout();
+            }
+            else {
+                ((AnnotationExtension) chart).getAnnotations().clearPolygonAnnotations(Layer.BACKGROUND);
+                ((AnnotationExtension) chart).getAnnotations().clearPolygonAnnotations(Layer.FOREGROUND);
+            }
+        }
+    }
+
+
+    /**
+     *
+     * @param enabled
+     */
     private void initMarkers(Boolean enabled) {
         // Test the chart for  the MarkerExtension
         if (chart instanceof MarkerExtension) {

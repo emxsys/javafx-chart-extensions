@@ -29,23 +29,27 @@
  */
 package com.emxsys.chart.extension;
 
+import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
+
 /**
  *
  * @author Bruce Schubert
  */
-public class XYPolygonAnnotation {
+public class XYPolygonAnnotation implements XYAnnotation {
+    
 
     private final Polygon polygon = new Polygon();
 
     double[] xyValues;
 
+
     public XYPolygonAnnotation(double[] xyValues, Double strokeWidth,
-            Paint outlinePaint, Paint fillPaint) {
+        Paint outlinePaint, Paint fillPaint) {
 
         if (xyValues == null || xyValues.length == 0) {
             throw new IllegalArgumentException("xyValues cannot be null or empty.");
@@ -62,6 +66,7 @@ public class XYPolygonAnnotation {
         polygon.setFill(fillPaint);
     }
 
+
     public XYPolygonAnnotation(double[] xyValues) {
 
         if (xyValues == null || xyValues.length == 0) {
@@ -75,26 +80,45 @@ public class XYPolygonAnnotation {
         polygon.getStyleClass().add("chart-annotation-polygon");
     }
 
-    public Polygon getNode() {
+
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public Node getNode() {
         return polygon;
     }
 
-    public void setTooltipText(String text) {
-        Tooltip.install(polygon, new Tooltip(text));
-    }
 
-    void layoutPolygon(ValueAxis xAxis, ValueAxis yAxis) {
+    /**
+     *
+     * @param xAxis
+     * @param yAxis
+     */
+    @Override
+    public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
         polygon.getPoints().clear();
         int i = 0;
         for (double xyValue : xyValues) {
             // Plot the values
             if (i % 2 == 0) {
                 polygon.getPoints().add(xAxis.getDisplayPosition(xyValue));
-            } else {
+            }
+            else {
                 polygon.getPoints().add(yAxis.getDisplayPosition(xyValue));
             }
             ++i;
         }
+    }
+
+
+    /**
+     * 
+     * @param text 
+     */
+    public void setTooltipText(String text) {
+        Tooltip.install(polygon, new Tooltip(text));
     }
 
 }

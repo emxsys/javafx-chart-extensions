@@ -29,6 +29,7 @@
  */
 package com.emxsys.chart.extension;
 
+import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -38,7 +39,7 @@ import javafx.scene.shape.Line;
  *
  * @author Bruce Schubert
  */
-public class XYLineAnnotation {
+public class XYLineAnnotation implements XYAnnotation {
 
     private final Line line = new Line();
     private final double x1;
@@ -82,12 +83,14 @@ public class XYLineAnnotation {
     }
 
 
-    public Line getNode() {
+    @Override
+    public Node getNode() {
         return line;
     }
 
 
-    void layoutLine(ValueAxis xAxis, ValueAxis yAxis) {
+    @Override
+    public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
         line.setStartX(xAxis.getDisplayPosition(x1));
         line.setStartY(yAxis.getDisplayPosition(y1));
         line.setEndX(xAxis.getDisplayPosition(x2));

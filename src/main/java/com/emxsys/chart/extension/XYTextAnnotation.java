@@ -30,85 +30,121 @@
 package com.emxsys.chart.extension;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
+
 
 /**
  *
  * @author Bruce Schubert
  */
-public class XYTextAnnotation {
+public class XYTextAnnotation implements XYAnnotation {
 
     private final Label label = new Label();
     private double x;
     private double y;
+    private double displayX;
+    private double displayY;
     private Pos textAnchor = Pos.CENTER;
 
+
     public XYTextAnnotation(String text, double x, double y) {
+        this(text, x, y, null);
+    }
+
+
+    public XYTextAnnotation(String text, double x, double y, Pos textAnchor) {
         if (text == null || text.isEmpty()) {
             throw new IllegalArgumentException("'text' arg cannot be null or empty.");
         }
         this.label.setText(text);
         this.label.getStyleClass().add("chart-annotation-text");
 
+        this.label.widthProperty().addListener((observable) -> layoutText());
+        this.label.heightProperty().addListener((observable) -> layoutText());
+
         this.x = x;
         this.y = y;
+        this.displayX = x;  // initial dummy value
+        this.displayY = y;  // initail dummy value
+
+        if (textAnchor != null) {
+            this.textAnchor = textAnchor;
+        }
     }
+
+
+    @Override
+    public Node getNode() {
+        return label;
+    }
+
+
+    @Override
+    public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
+        displayX = xAxis.getDisplayPosition(x);
+        displayY = yAxis.getDisplayPosition(y);
+        layoutText();
+    }
+
+
+    void layoutText() {
+        // Note: initially, the label width and height are 0 so we have to recompute
+        // the layout after the first rendering.  See the width and height property listeners.
+        switch (textAnchor) {
+            case TOP_CENTER:
+            case CENTER:
+            case BOTTOM_CENTER:
+                label.setLayoutX(displayX - (label.getWidth() / 2));
+                break;
+            case TOP_LEFT:
+            case CENTER_LEFT:
+            case BOTTOM_LEFT:
+                label.setLayoutX(displayX);
+                break;
+            case TOP_RIGHT:
+            case CENTER_RIGHT:
+            case BOTTOM_RIGHT:
+                label.setLayoutX(displayX - label.getWidth());
+                break;
+            default:
+                throw new IllegalStateException(textAnchor.name() + " is not supported.");
+        }
+        switch (textAnchor) {
+            case CENTER:
+            case CENTER_LEFT:
+            case CENTER_RIGHT:
+                label.setLayoutY(displayY - (label.getHeight() / 2));
+                break;
+            case TOP_LEFT:
+            case TOP_CENTER:
+            case TOP_RIGHT:
+                label.setLayoutY(displayY);
+                break;
+            case BOTTOM_LEFT:
+            case BOTTOM_CENTER:
+            case BOTTOM_RIGHT:
+                label.setLayoutY(displayY - label.getHeight());
+                break;
+            default:
+                throw new IllegalStateException(textAnchor.name() + " is not supported.");
+        }
+    }
+
 
     public void setText(String text) {
         this.label.setText(text);
     }
 
-    public Label getNode() {
-        return label;
-    }
 
     public Pos getTextAnchor() {
         return textAnchor;
     }
 
+
     public void setTextAnchor(Pos textAnchor) {
         this.textAnchor = textAnchor;
     }
 
-    void layoutText(ValueAxis xAxis, ValueAxis yAxis) {
-
-//        label.setLayoutY(yAxis.getDisplayPosition(y));
-//        label.setLayoutX(xAxis.getDisplayPosition(x));
-
-        switch (textAnchor) {
-            case TOP_CENTER:
-            case CENTER:
-            case BOTTOM_CENTER:
-                label.setLayoutX(xAxis.getDisplayPosition(x) - (label.getWidth() / 2));
-                break;
-            case TOP_LEFT:
-            case CENTER_LEFT:
-            case BOTTOM_LEFT:
-                label.setLayoutX(xAxis.getDisplayPosition(x));
-                break;
-            case TOP_RIGHT:
-            case CENTER_RIGHT:
-            case BOTTOM_RIGHT:
-                label.setLayoutX(xAxis.getDisplayPosition(x) - label.getWidth());
-                break;
-        }
-        switch (textAnchor) {
-            case CENTER:
-            case CENTER_LEFT:
-            case CENTER_RIGHT:
-                label.setLayoutY(yAxis.getDisplayPosition(y) - (label.getHeight() / 2));
-                break;
-            case TOP_LEFT:
-            case TOP_CENTER:
-            case TOP_RIGHT:
-                label.setLayoutY(yAxis.getDisplayPosition(y));
-                break;
-            case BOTTOM_LEFT:
-            case BOTTOM_CENTER:
-            case BOTTOM_RIGHT:
-                label.setLayoutY(yAxis.getDisplayPosition(y) - label.getHeight());
-                break;
-        }
-    }
 }
