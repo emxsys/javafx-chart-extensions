@@ -1,3 +1,32 @@
+/*
+ * Copyright (c) 2015, Bruce Schubert <bruce@emxsys.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     - Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *     - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *
+ *     - Neither the name of Bruce Schubert, Emxsys nor the names of its 
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.emxsys.demo;
 
 import com.emxsys.chart.EnhancedLineChart;
@@ -9,21 +38,17 @@ import com.emxsys.chart.extension.LogarithmicAxis;
 import com.emxsys.chart.extension.MarkerExtension;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.ValueMarker;
-import com.emxsys.chart.extension.XYAnnotation;
-import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
+import com.emxsys.chart.extension.XYImageAnnotation;
 import com.emxsys.chart.extension.XYLineAnnotation;
 import com.emxsys.chart.extension.XYPolygonAnnotation;
 import com.emxsys.chart.extension.XYTextAnnotation;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -36,13 +61,14 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 
 /**
- *
+ * FXML controller class for the JavaFX Chart Extensions DemoApp.
+ * 
  * @author Bruce Schubert
  */
 public class DemoController implements Initializable {
@@ -52,6 +78,7 @@ public class DemoController implements Initializable {
 
     @FXML
     private ToggleGroup chartGroup;
+    
     @FXML
     private CheckBox cbSubtitles;
 
@@ -72,11 +99,13 @@ public class DemoController implements Initializable {
 
     private XYChart chart;
 
-    private ArrayList<XYAnnotation> polygons = new ArrayList<>();
-    private ArrayList<XYAnnotation> lines = new ArrayList<>();
-    private ArrayList<XYAnnotation> text = new ArrayList<>();
 
-
+    /**
+     * Initializer called by the FXML loader.
+     *
+     * @param url Not used.
+     * @param rb Not used.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -106,50 +135,60 @@ public class DemoController implements Initializable {
             chartPane.getChildren().add(fitToParent(chart));
 
             // Show the selected extensions
-            initSubtitle(cbSubtitles.isSelected());
+            showSubtitle(cbSubtitles.isSelected());
             initPolygonAnnotations(cbPolygonAnnotations.isSelected());
-            initLineAnnotations(cbLineAnnotations.isSelected());
-            initTextAnnotations(cbTextAnnotations.isSelected());
-            initMarkers(cbMarkers.isSelected());
+            showImageAnnotations(cbImageAnnotations.isSelected());
+            showLineAnnotations(cbLineAnnotations.isSelected());
+            showTextAnnotations(cbTextAnnotations.isSelected());
+            showMarkers(cbMarkers.isSelected());
         });
 
         // Handle Subtitle checkbox
         cbSubtitles.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            initSubtitle(newValue);
+            showSubtitle(newValue);
         });
 
         // Handle Markers checkbox
         cbMarkers.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            initMarkers(newValue);
+            showMarkers(newValue);
         });
         // Handle Line Annotation checkbox
         cbTextAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            initTextAnnotations(newValue);
+            showTextAnnotations(newValue);
         });
         // Handle Line Annotation checkbox
         cbLineAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            initLineAnnotations(newValue);
+            showLineAnnotations(newValue);
         });
         // Handle Polygon Annotation checkbox
         cbPolygonAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             initPolygonAnnotations(newValue);
         });
+        // Handle Image Annotation checkbox
+        cbImageAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            showImageAnnotations(newValue);
+        });
     }
 
 
-    private void initSubtitle(Boolean enabled) {
+    /**
+     * Shows a subtitle.
+     *
+     * @param enabled If true then shows a subtitle.
+     */
+    private void showSubtitle(Boolean enabled) {
         if (chart instanceof SubtitleExtension) {
-            ((SubtitleExtension) chart).setSubtitle(enabled ? "Subtitle" : null);
+            ((SubtitleExtension) chart).setSubtitle(enabled ? "Subtitle goes here" : null);
         }
     }
 
 
     /**
-     * Shows or hides the line annotations.
+     * Shows a red line annotation on the background layer from the upper left to the lower right.
      *
-     * @param enabled True to show, false to hide.
+     * @param enabled Shows a line annotation if true.
      */
-    private void initLineAnnotations(Boolean enabled) {
+    private void showLineAnnotations(Boolean enabled) {
         if (chart instanceof AnnotationExtension) {
             if (enabled) {
 
@@ -171,16 +210,45 @@ public class DemoController implements Initializable {
 
 
     /**
-     * Shows or hides text annotations.
+     * Shows the Emxsys logo on the background layer at the chart's origin and anchored to the
+     * image's bottom left corner.
      *
-     * @param enabled True to show, false to hide.
+     * @param enabled Shows the image if true.
      */
-    private void initTextAnnotations(Boolean enabled) {
+    private void showImageAnnotations(Boolean enabled) {
+        if (chart instanceof AnnotationExtension) {
+            if (enabled) {
+
+                ValueAxis xAxis = (ValueAxis) chart.getXAxis();
+                ValueAxis yAxis = (ValueAxis) chart.getYAxis();
+
+                Image logo = new Image(getClass().getResourceAsStream("/images/emxsys_small_rect.jpg"));
+
+                ((AnnotationExtension) chart).getAnnotations().add(new XYImageAnnotation(
+                    xAxis.getLowerBound(), yAxis.getLowerBound(), logo, Pos.BOTTOM_LEFT), Layer.BACKGROUND);
+
+                chart.requestLayout();
+            }
+            else {
+                ((AnnotationExtension) chart).getAnnotations().clearImageAnnotations(Layer.BACKGROUND);
+            }
+        }
+    }
+
+
+    /**
+     * Shows text on the background layer at the upper left, and anchored to the label's top left
+     * corner; and text on the foreground layer at the lower right, and anchored to the label's
+     * bottom right corner.
+     *
+     * @param enabled Shows the text labels if true.
+     */
+    private void showTextAnnotations(Boolean enabled) {
         if (chart instanceof AnnotationExtension) {
             if (enabled) {
                 ValueAxis xAxis = (ValueAxis) chart.getXAxis();
                 ValueAxis yAxis = (ValueAxis) chart.getYAxis();
-                
+
                 ((AnnotationExtension) chart).getAnnotations().add(new XYTextAnnotation(
                     "Text on Background", xAxis.getLowerBound(), yAxis.getUpperBound(), Pos.TOP_LEFT),
                     Layer.BACKGROUND);
@@ -200,9 +268,10 @@ public class DemoController implements Initializable {
 
 
     /**
-     * Shows or hides polygon annotations.
+     * Shows a solid orange polygon on the background layer, and a translucent green polygon on the
+     * foreground layer; both polygons have a black border.
      *
-     * @param enabled True to show, false to hide.
+     * @param enabled Shows the two polygons if true;
      */
     private void initPolygonAnnotations(Boolean enabled) {
         if (chart instanceof AnnotationExtension) {
@@ -239,10 +308,11 @@ public class DemoController implements Initializable {
 
 
     /**
+     * Shows the min, max and average value markers for series #1.
      *
-     * @param enabled
+     * @param enabled Shows the value markers if true.
      */
-    private void initMarkers(Boolean enabled) {
+    private void showMarkers(Boolean enabled) {
         // Test the chart for  the MarkerExtension
         if (chart instanceof MarkerExtension) {
             if (enabled) {
@@ -275,7 +345,7 @@ public class DemoController implements Initializable {
 
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Min: %1$.1f", minY), Pos.TOP_LEFT));
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, String.format("Series 1 Avg: %1$.1f", avgY), Pos.TOP_CENTER));
-                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Max: %1$.1f", maxY), Pos.BOTTOM_LEFT));
+                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Max: %1$.1f", maxY), Pos.BOTTOM_RIGHT));
             }
             else {
                 ((MarkerExtension) chart).getMarkers().clearDomainMarkers();
@@ -286,6 +356,11 @@ public class DemoController implements Initializable {
     }
 
 
+    /**
+     * Creates a scatter chart that includes the JavaFX Chart Extensions.
+     *
+     * @return An enhanced scatter chart.
+     */
     private EnhancedScatterChart createScatterChart() {
         NumberAxis xAxis = new NumberAxis("X-Axis (Domain)", 0d, 8.0d, 1.0d);
         NumberAxis yAxis = new NumberAxis("Y-Axis (Range)", 0.0d, 5.0d, 1.0d);
@@ -310,6 +385,11 @@ public class DemoController implements Initializable {
     }
 
 
+    /**
+     * Creates a line chart that includes the JavaFX Chart Extensions.
+     *
+     * @return An enhanced line chart.
+     */
     public EnhancedLineChart createLineChart() {
         NumberAxis xAxis = new NumberAxis("Values for X-Axis (Domain)", 0, 3, 1);
         NumberAxis yAxis = new NumberAxis("Values for Y-Axis (Range)", 0, 3, 1);
@@ -337,6 +417,11 @@ public class DemoController implements Initializable {
     }
 
 
+    /**
+     * Creates a logarithmic scatter chart that includes the JavaFX Chart Extensions.
+     *
+     * @return An enhanced logarithmic scatter chart.
+     */
     private LogScatterChart createLogScatterChart() {
         final int NUM_POINTS = 20;
         final double MAX_X = 1000d;
@@ -357,14 +442,17 @@ public class DemoController implements Initializable {
         dataset.add(series1);
 
         LogScatterChart chart = new LogScatterChart(xAxis, yAxis, dataset);
-        Platform.runLater(() -> {
-            chart.setTitle("LogScatterChart");
-        });
+        chart.setTitle("LogScatterChart");
 
         return chart;
     }
 
 
+    /**
+     * Creates a logarithmic line chart that includes the JavaFX Chart Extensions.
+     *
+     * @return An enhanced logarithmic line chart.
+     */
     private LogLineChart createLogLineChart() {
         final int NUM_POINTS = 20;
         final double MAX_X = 1000d;
@@ -390,6 +478,13 @@ public class DemoController implements Initializable {
     }
 
 
+    /**
+     * Sets the anchors to 0 for all fours sides of the child node so that it conforms to the
+     * parent's size.
+     *
+     * @param child Node to have the anchors set.
+     * @return The modified child node.
+     */
     public static Node fitToParent(Node child) {
         AnchorPane.setTopAnchor(child, 0.0);
         AnchorPane.setBottomAnchor(child, 0.0);

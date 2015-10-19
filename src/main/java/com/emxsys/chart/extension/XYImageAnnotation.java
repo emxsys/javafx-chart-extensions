@@ -30,75 +30,102 @@
 package com.emxsys.chart.extension;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
+
 /**
  *
  * @author Bruce Schubert
  */
-public class XYImageAnnotation {
+public class XYImageAnnotation implements XYAnnotation {
 
     private final double x;
     private final double y;
+    private double displayX;
+    private double displayY;
     private final ImageView imageView = new ImageView();
     private final AnchorPane pane = new AnchorPane();
     private Pos imageAnchor;
+
 
     public XYImageAnnotation(double x, double y, Image image) {
         this(x, y, image, Pos.TOP_LEFT);
     }
 
+
     public XYImageAnnotation(double x, double y, Image image, Pos anchor) {
         this.x = x;
         this.y = y;
+        this.displayX = x;
+        this.displayY = y;
         this.imageAnchor = anchor;
         this.imageView.setImage(image);
         this.imageView.setSmooth(false);
         this.pane.getChildren().add(imageView);
+
+        this.pane.widthProperty().addListener((observable) -> layoutImage());
+        this.pane.heightProperty().addListener((observable) -> layoutImage());
+
     }
 
-    public AnchorPane getNode() {
+
+    @Override
+    public Node getNode() {
         return pane;
     }
-    
-    void layoutImage(ValueAxis xAxis, ValueAxis yAxis) {
+
+
+    @Override
+    public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
+        displayX = xAxis.getDisplayPosition(x);
+        displayY = yAxis.getDisplayPosition(y);
+        layoutImage();
+    }
+
+
+    protected void layoutImage() {
 
         switch (imageAnchor) {
             case TOP_CENTER:
             case CENTER:
             case BOTTOM_CENTER:
-                pane.setLayoutX(xAxis.getDisplayPosition(x) - (pane.getWidth() / 2));
+                pane.setLayoutX(displayX - (pane.getWidth() / 2));
                 break;
             case TOP_LEFT:
             case CENTER_LEFT:
             case BOTTOM_LEFT:
-                pane.setLayoutX(xAxis.getDisplayPosition(x));
+                pane.setLayoutX(displayX);
                 break;
             case TOP_RIGHT:
             case CENTER_RIGHT:
             case BOTTOM_RIGHT:
-                pane.setLayoutX(xAxis.getDisplayPosition(x) - pane.getWidth());
+                pane.setLayoutX(displayX - pane.getWidth());
                 break;
+            default:
+                throw new IllegalStateException(getClass().getSimpleName() + ": " + imageAnchor.name() + " is not supported.");
         }
         switch (imageAnchor) {
             case CENTER:
             case CENTER_LEFT:
             case CENTER_RIGHT:
-                pane.setLayoutY(yAxis.getDisplayPosition(y) - (pane.getHeight() / 2));
+                pane.setLayoutY(displayY - (pane.getHeight() / 2));
                 break;
             case TOP_LEFT:
             case TOP_CENTER:
             case TOP_RIGHT:
-                pane.setLayoutY(yAxis.getDisplayPosition(y));
+                pane.setLayoutY(displayY);
                 break;
             case BOTTOM_LEFT:
             case BOTTOM_CENTER:
             case BOTTOM_RIGHT:
-                pane.setLayoutY(yAxis.getDisplayPosition(y) - pane.getHeight());
+                pane.setLayoutY(displayY - pane.getHeight());
                 break;
+            default:
+                throw new IllegalStateException(getClass().getSimpleName() + ": " + imageAnchor.name() + " is not supported.");
         }
     }
 

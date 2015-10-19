@@ -170,6 +170,17 @@ public class XYAnnotations {
     }
 
 
+    public void clearImageAnnotations(Layer layer) {
+        ArrayList<XYAnnotation> copy = new ArrayList<>(layer == Layer.BACKGROUND ? bgAnnotations : fgAnnotations);
+
+        for (XYAnnotation annotation : copy) {
+            if (annotation instanceof XYImageAnnotation) {
+                remove(annotation, layer);
+            }
+        }
+    }
+
+
     public void layoutAnnotations() {
         layoutBackground();
         layoutForeground();

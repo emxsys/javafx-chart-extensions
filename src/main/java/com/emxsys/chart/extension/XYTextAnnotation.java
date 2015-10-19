@@ -56,7 +56,7 @@ public class XYTextAnnotation implements XYAnnotation {
 
     public XYTextAnnotation(String text, double x, double y, Pos textAnchor) {
         if (text == null || text.isEmpty()) {
-            throw new IllegalArgumentException("'text' arg cannot be null or empty.");
+            throw new IllegalArgumentException(getClass().getSimpleName() + ": 'text' arg cannot be null or empty.");
         }
         this.label.setText(text);
         this.label.getStyleClass().add("chart-annotation-text");
@@ -109,7 +109,7 @@ public class XYTextAnnotation implements XYAnnotation {
                 label.setLayoutX(displayX - label.getWidth());
                 break;
             default:
-                throw new IllegalStateException(textAnchor.name() + " is not supported.");
+                throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
         }
         switch (textAnchor) {
             case CENTER:
@@ -128,7 +128,7 @@ public class XYTextAnnotation implements XYAnnotation {
                 label.setLayoutY(displayY - label.getHeight());
                 break;
             default:
-                throw new IllegalStateException(textAnchor.name() + " is not supported.");
+                throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
         }
     }
 
