@@ -4,7 +4,7 @@
 
     <groupId>com.emxsys</groupId>
     <artifactId>jfxchartext</artifactId>
-    <version>4.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JavaFX Chart Extensions</name>
@@ -16,7 +16,7 @@
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>Your Organisation</name>
+        <name>Emxsys</name>
     </organization>
 
     <build>
