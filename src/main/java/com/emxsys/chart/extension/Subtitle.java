@@ -37,7 +37,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 /**
- *
+ * The Subtitle class adds the subtitle capability to a JavaFX chart.
+ * 
  * @author Bruce Schubert
  */
 public class Subtitle {

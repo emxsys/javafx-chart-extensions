@@ -34,14 +34,26 @@ import javafx.scene.chart.ValueAxis;
 
 
 /**
+ * The XYAnnotation interface defines the annotations managed by the XYAnnotations object.
  *
  * @author Bruce Schubert
  */
 public interface XYAnnotation {
 
+    /**
+     * Gets the Node representation for the annotation.
+     *
+     * @return A Node derived object.
+     */
     Node getNode();
 
 
+    /**
+     * Performs the layout of the annotation.
+     *
+     * @param xAxis
+     * @param yAxis
+     */
     void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis);
-    
+
 }

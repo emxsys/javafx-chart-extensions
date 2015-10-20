@@ -29,11 +29,18 @@
  */
 package com.emxsys.chart.extension;
 
+
 /**
+ * The MarkerExtenstion interface defines the marker capabilities added to an enhanced chart type.
  *
  * @author Bruce Schubert
  */
 public interface MarkerExtension {
 
+    /**
+     * Provides access to the XYMarkers extension.
+     *
+     * @return Gets the XYMarkers object used to add/remove value markers.
+     */
     XYMarkers getMarkers();
 }

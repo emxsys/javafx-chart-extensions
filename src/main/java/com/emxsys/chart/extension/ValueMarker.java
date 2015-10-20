@@ -39,6 +39,17 @@ import javafx.scene.shape.Line;
 
 
 /**
+ * A JavaFX Chart Extension class that highlights a value on an XYChart's X (domain) or Y (range)
+ * axis. The value is highlighted with a line through the value with an optional label. ValueMarkers
+ * are added to an XYMarkers object. For example:
+ * <pre>{@code
+ * EnhancedScatterChart chart = new EnhancedScatterChart(xAxis, yAxis, dataset);
+ * double maxX;
+ * double maxY;
+ * // TODO: compute maxX, and maxY
+ * chart.getMarkers().addDomainMarker(new ValueMarker(maxX, String.format("Max: %1$.1f", maxX), Pos.BOTTOM_RIGHT));
+ * chart.getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Max: %1$.1f", maxY), Pos.TOP_LEFT));
+ * }</pre>
  *
  * @author Bruce Schubert
  */
@@ -54,7 +65,7 @@ public class ValueMarker {
     /**
      * Constructs a marker line drawn at the given value.
      *
-     * @param value
+     * @param value The value to be highlighted.
      */
     public ValueMarker(double value) {
         this(value, null);
@@ -62,10 +73,11 @@ public class ValueMarker {
 
 
     /**
-     * Constructs a marker line drawn at the given value.
+     * Constructs a marker line and label drawn at the given value. The label will be anchored at
+     * its top left corner.
      *
-     * @param value
-     * @param text
+     * @param value The value to be highlighted.
+     * @param text The text to display on the line.
      */
     public ValueMarker(double value, String text) {
         this(value, text, Pos.TOP_LEFT);
@@ -73,11 +85,13 @@ public class ValueMarker {
 
 
     /**
-     * Constructs a marker line drawn at the given value.
+     * Constructs a marker line and label drawn at the given value .
      *
-     * @param value
-     * @param text
-     * @param textAnchor
+     * @param value The value to be highlighted.
+     * @param text The label text to be displayed on the line.
+     * @param textAnchor The anchor point defining where the label should be placed relative to the
+     * value. Valid values include: TOP_LEFT, TOP_RIGHT, TOP_CENTER, CENTER_LEFT, CENTER_RIGHT,
+     * CENTER, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_CENTER
      */
     public ValueMarker(double value, String text, Pos textAnchor) {
         this.value.set(value);
@@ -87,6 +101,9 @@ public class ValueMarker {
         this.label.getStyleClass().add("chart-marker-label");
         this.label.applyCss();
 
+        // Note: these listeners are essential for the correct layout of the label.
+        // During the first layout pass, the width and height of the label are not
+        // set which causes some of the size based placements to be incorrectly set. 
         this.label.widthProperty().addListener((observable) -> layoutText());
         this.label.heightProperty().addListener((observable) -> layoutText());
 
@@ -94,11 +111,21 @@ public class ValueMarker {
     }
 
 
+    /**
+     * Gets the marker value.
+     *
+     * @return The current value.
+     */
     public double getValue() {
         return value.get();
     }
 
 
+    /**
+     * Sets the marker value and hence placement on the chart.
+     *
+     * @param value The new value.
+     */
     public void setValue(double value) {
         this.value.set(value);
     }
@@ -109,32 +136,63 @@ public class ValueMarker {
     }
 
 
+    /**
+     * Gets the optional label text.
+     *
+     * @return The current label text.
+     */
     public String getLabel() {
         return label.getText();
     }
 
 
+    /**
+     * Sets the optional label text.
+     *
+     * @param text The new text value.
+     */
     public void setLabel(String text) {
         label.setText(text);
     }
 
 
+    /**
+     * Gets the current node.
+     *
+     * @return A Group containing a line and label.
+     */
     public Group getNode() {
         return group;
     }
 
 
+    /**
+     * Gets the anchor that defines where the text will be placed.
+     *
+     * @return The current text placement anchor.
+     */
     public Pos getTextAnchor() {
         return textAnchor;
     }
 
 
+    /**
+     * Sets the anchor that defines where the text will be placed.
+     *
+     * @param textAnchor The new text placement anchor.
+     */
     public void setTextAnchor(Pos textAnchor) {
         this.textAnchor = textAnchor;
     }
 
 
-    void layoutDomainMarker(ValueAxis xAxis, ValueAxis yAxis) {
+    /**
+     * Lays out this marker on the X (domain) axis.
+     *
+     * @param xAxis The chart's X axis.
+     * @param yAxis The chart's Y axis.
+     */
+    public void layoutDomainMarker(ValueAxis xAxis, ValueAxis yAxis) {
 
         // Determine the line height
         double lower = yAxis.getLowerBound();
@@ -148,11 +206,16 @@ public class ValueMarker {
         line.setEndX(line.getStartX());
         // Layout the text base on the line
         layoutText();
-
     }
 
 
-    void layoutRangeMarker(ValueAxis xAxis, ValueAxis yAxis) {
+    /**
+     * Lays out this marker on the Y (range) axis.
+     *
+     * @param xAxis The chart's X axis.
+     * @param yAxis The chart's Y axis.
+     */
+    public void layoutRangeMarker(ValueAxis xAxis, ValueAxis yAxis) {
 
         // Determine the line width
         double lower = xAxis.getLowerBound();
@@ -169,7 +232,7 @@ public class ValueMarker {
     }
 
 
-    void layoutText() {
+    protected void layoutText() {
         switch (textAnchor) {
             case TOP_CENTER:
             case CENTER:
@@ -186,6 +249,8 @@ public class ValueMarker {
             case BOTTOM_RIGHT:
                 label.setLayoutX(line.getEndX() - label.getWidth());
                 break;
+            default:
+                throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
         }
         switch (textAnchor) {
             case CENTER:
@@ -203,6 +268,8 @@ public class ValueMarker {
             case BOTTOM_RIGHT:
                 label.setLayoutY(line.getStartY());
                 break;
+            default:
+                throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
         }
     }
 

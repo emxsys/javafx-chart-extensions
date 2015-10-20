@@ -35,8 +35,6 @@ import com.emxsys.chart.extension.Subtitle;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYMarkers;
-import java.util.Timer;
-import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -67,7 +65,7 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
 
         subtitle = new Subtitle(this, getChildren(), getLegend());
         markers = new XYMarkers<>(this, getPlotChildren());
-        annotations = new XYAnnotations(this, getChartChildren(), getPlotChildren());
+        annotations = new XYAnnotations(this, getChartChildren());
     }
 
     @Override

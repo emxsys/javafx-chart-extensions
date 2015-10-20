@@ -36,6 +36,7 @@ import javafx.scene.control.Label;
 
 
 /**
+ * The XYTextAnnotation class draws text annotations on the foreground or background of an XYChart.
  *
  * @author Bruce Schubert
  */
@@ -49,11 +50,26 @@ public class XYTextAnnotation implements XYAnnotation {
     private Pos textAnchor = Pos.CENTER;
 
 
+    /**
+     * Constructs a text annotation centered on the given x,y.
+     *
+     * @param text
+     * @param x
+     * @param y
+     */
     public XYTextAnnotation(String text, double x, double y) {
         this(text, x, y, null);
     }
 
 
+    /**
+     * Constructs a text annotation.
+     *
+     * @param text
+     * @param x
+     * @param y
+     * @param textAnchor
+     */
     public XYTextAnnotation(String text, double x, double y, Pos textAnchor) {
         if (text == null || text.isEmpty()) {
             throw new IllegalArgumentException(getClass().getSimpleName() + ": 'text' arg cannot be null or empty.");
@@ -61,13 +77,16 @@ public class XYTextAnnotation implements XYAnnotation {
         this.label.setText(text);
         this.label.getStyleClass().add("chart-annotation-text");
 
+        // Note: these listeners are essential for the correct layout of the label.
+        // During the initial layout pass, the width and height of the label are not
+        // set which causes some of the size based placements to be computed incorrectly. 
         this.label.widthProperty().addListener((observable) -> layoutText());
         this.label.heightProperty().addListener((observable) -> layoutText());
 
         this.x = x;
         this.y = y;
-        this.displayX = x;  // initial dummy value
-        this.displayY = y;  // initail dummy value
+        this.displayX = x;  // initial dummy value, will be set by layoutAnnotation
+        this.displayY = y;  // initail dummy value, will be set by layoutAnnotation
 
         if (textAnchor != null) {
             this.textAnchor = textAnchor;
@@ -75,12 +94,23 @@ public class XYTextAnnotation implements XYAnnotation {
     }
 
 
+    /**
+     * Gets the node representation.
+     *
+     * @return A Label object.
+     */
     @Override
     public Node getNode() {
         return label;
     }
 
 
+    /**
+     * Performs the layout for the label.
+     *
+     * @param xAxis
+     * @param yAxis
+     */
     @Override
     public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
         displayX = xAxis.getDisplayPosition(x);
@@ -89,7 +119,7 @@ public class XYTextAnnotation implements XYAnnotation {
     }
 
 
-    void layoutText() {
+    protected void layoutText() {
         // Note: initially, the label width and height are 0 so we have to recompute
         // the layout after the first rendering.  See the width and height property listeners.
         switch (textAnchor) {
@@ -133,16 +163,32 @@ public class XYTextAnnotation implements XYAnnotation {
     }
 
 
+    /**
+     * Sets the text for the label.
+     *
+     * @param text The new text.
+     */
     public void setText(String text) {
         this.label.setText(text);
     }
 
 
+    /**
+     * Gets the anchor point for the label.
+     *
+     * @return The current anchor position.
+     */
     public Pos getTextAnchor() {
         return textAnchor;
     }
 
 
+    /**
+     * Sets the anchor point for the label, which establishes the part of the label that will be
+     * anchored to the annotation's x,y.
+     *
+     * @param textAnchor The new anchor position.
+     */
     public void setTextAnchor(Pos textAnchor) {
         this.textAnchor = textAnchor;
     }

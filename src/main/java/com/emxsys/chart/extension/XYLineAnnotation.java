@@ -36,6 +36,7 @@ import javafx.scene.shape.Line;
 
 
 /**
+ * The XYLineAnnotation class draws line annotations on the foreground or background of an XYChart.
  *
  * @author Bruce Schubert
  */
@@ -73,6 +74,14 @@ public class XYLineAnnotation implements XYAnnotation {
     }
 
 
+    /**
+     * Constructs a line annotation drawn with CSS styles.
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     public XYLineAnnotation(double x1, double y1, double x2, double y2) {
         this.line.getStyleClass().add("chart-annotation-line");
 
@@ -83,12 +92,23 @@ public class XYLineAnnotation implements XYAnnotation {
     }
 
 
+    /**
+     * Gets the Node representation.
+     *
+     * @return A Line object.
+     */
     @Override
     public Node getNode() {
         return line;
     }
 
 
+    /**
+     * Performs the layout of the line.
+     *
+     * @param xAxis
+     * @param yAxis
+     */
     @Override
     public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
         line.setStartX(xAxis.getDisplayPosition(x1));

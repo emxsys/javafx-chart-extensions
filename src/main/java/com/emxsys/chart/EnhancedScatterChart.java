@@ -35,7 +35,6 @@ import com.emxsys.chart.extension.Subtitle;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYMarkers;
-import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,7 +68,7 @@ public class EnhancedScatterChart<X, Y> extends ScatterChart<X, Y>
         super(xAxis, yAxis, data);
         subtitle = new Subtitle(this, getChildren(), getLegend());
         markers = new XYMarkers<>(this, getPlotChildren());
-        annotations = new XYAnnotations(this, getChartChildren(), getPlotChildren());
+        annotations = new XYAnnotations(this, getChartChildren());
     }
 
 

@@ -29,11 +29,19 @@
  */
 package com.emxsys.chart.extension;
 
+
 /**
+ * The AnnotationExtenstion interface defines the annotation capabilities added to an enhanced chart
+ * type.
  *
  * @author Bruce Schubert
  */
 public interface AnnotationExtension {
 
+    /**
+     * Provides access the XYAnnotations extension.
+     *
+     * @return The XYAnnotations object used to add/remove chart annotations.
+     */
     XYAnnotations getAnnotations();
 }

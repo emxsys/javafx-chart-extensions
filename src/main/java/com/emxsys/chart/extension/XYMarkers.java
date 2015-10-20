@@ -29,7 +29,6 @@
  */
 package com.emxsys.chart.extension;
 
-
 import java.util.Objects;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
@@ -38,7 +37,9 @@ import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 
+
 /**
+ * JavaFX Chart Extension that adds ValueMarkers to an XYChart.
  *
  * @author Bruce Schubert
  * @param <X>
@@ -52,6 +53,12 @@ public final class XYMarkers<X, Y> {
     private final ObservableList<ValueMarker> domainMarkers;
 
 
+    /**
+     * Constructs an XYMarkers object.
+     *
+     * @param chart The chart on which to display ValueMarkers.
+     * @param plotChildren The children returned by chart.getPlotChildren().
+     */
     public XYMarkers(XYChart chart, ObservableList<Node> plotChildren) {
         this.chart = chart;
         this.plotChildren = plotChildren;
@@ -65,8 +72,9 @@ public final class XYMarkers<X, Y> {
         domainMarkers.addListener((InvalidationListener) observable -> layoutDomainMarkers());
     }
 
+
     /**
-     * Adds a marker to the Y Axis.
+     * Adds a marker to the Y (range) axis.
      *
      * @param marker The marker to be added.
      */
@@ -75,10 +83,14 @@ public final class XYMarkers<X, Y> {
         if (rangeMarkers.contains(marker)) {
             return;
         }
-        plotChildren.add(marker.getNode()); 
+        plotChildren.add(marker.getNode());
         rangeMarkers.add(marker);
     }
 
+
+    /**
+     * Clears all the range markers.
+     */
     public void clearRangeMarkers() {
 
         for (ValueMarker marker : rangeMarkers) {
@@ -87,6 +99,12 @@ public final class XYMarkers<X, Y> {
         rangeMarkers.clear();
     }
 
+
+    /**
+     * Removes the given marker.
+     *
+     * @param marker The marker to be removed.
+     */
     public void removeRangeMarker(ValueMarker marker) {
         Objects.requireNonNull(marker, getClass().getSimpleName() + ": marker must not be null");
         if (marker.getNode() != null) {
@@ -95,8 +113,9 @@ public final class XYMarkers<X, Y> {
         rangeMarkers.remove(marker);
     }
 
+
     /**
-     * Adds a marker to the X axis.
+     * Adds a marker to the X (domain) axis.
      *
      * @param marker The marker to be added.
      */
@@ -109,6 +128,10 @@ public final class XYMarkers<X, Y> {
         domainMarkers.add(marker);
     }
 
+
+    /**
+     * Clears all the domain markers.
+     */
     public void clearDomainMarkers() {
         for (ValueMarker marker : domainMarkers) {
             plotChildren.remove(marker.getNode());
@@ -116,6 +139,12 @@ public final class XYMarkers<X, Y> {
         domainMarkers.clear();
     }
 
+
+    /**
+     * Removes the given domain marker.
+     *
+     * @param marker The marker to be removed.
+     */
     public void removeDomainMarker(ValueMarker marker) {
         Objects.requireNonNull(marker, getClass().getSimpleName() + ": marker must not be null");
         if (marker.getNode() != null) {
@@ -124,10 +153,15 @@ public final class XYMarkers<X, Y> {
         domainMarkers.remove(marker);
     }
 
+
+    /**
+     * Performs a layout of the range and domain markers.
+     */
     public void layoutMarkers() {
         layoutDomainMarkers();
         layoutRangeMarkers();
     }
+
 
     private void layoutDomainMarkers() {
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();
@@ -136,6 +170,7 @@ public final class XYMarkers<X, Y> {
             marker.layoutRangeMarker(xAxis, yAxis);
         }
     }
+
 
     private void layoutRangeMarkers() {
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();

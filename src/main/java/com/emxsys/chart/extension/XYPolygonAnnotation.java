@@ -37,17 +37,26 @@ import javafx.scene.shape.Polygon;
 
 
 /**
+ * The XYPolygonAnnotation class draws polygon annotations on the foreground or background of an
+ * XYChart.
  *
  * @author Bruce Schubert
  */
 public class XYPolygonAnnotation implements XYAnnotation {
-    
 
     private final Polygon polygon = new Polygon();
 
     double[] xyValues;
 
 
+    /**
+     * Constructs a polygon annotation with specific stroke and colors that override CSS styles.
+     *
+     * @param xyValues
+     * @param strokeWidth
+     * @param outlinePaint
+     * @param fillPaint
+     */
     public XYPolygonAnnotation(double[] xyValues, Double strokeWidth,
         Paint outlinePaint, Paint fillPaint) {
 
@@ -67,6 +76,11 @@ public class XYPolygonAnnotation implements XYAnnotation {
     }
 
 
+    /**
+     * Constructs a polygon annotation that uses CSS styles for stroke and colors.
+     *
+     * @param xyValues
+     */
     public XYPolygonAnnotation(double[] xyValues) {
 
         if (xyValues == null || xyValues.length == 0) {
@@ -82,8 +96,8 @@ public class XYPolygonAnnotation implements XYAnnotation {
 
 
     /**
-     * 
-     * @return 
+     * Gets the node representation.
+     * @return A Polygon object.
      */
     @Override
     public Node getNode() {
@@ -92,6 +106,7 @@ public class XYPolygonAnnotation implements XYAnnotation {
 
 
     /**
+     * Performs the layout for the polygon.
      *
      * @param xAxis
      * @param yAxis
@@ -114,8 +129,9 @@ public class XYPolygonAnnotation implements XYAnnotation {
 
 
     /**
-     * 
-     * @param text 
+     * Assigns a Tooltip to the polygon.
+     *
+     * @param text The tooltip text to be displayed.
      */
     public void setTooltipText(String text) {
         Tooltip.install(polygon, new Tooltip(text));

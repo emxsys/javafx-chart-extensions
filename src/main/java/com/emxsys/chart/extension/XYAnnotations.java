@@ -38,15 +38,18 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.shape.Line;
 
 
 /**
+ * JavaFX Chart Extension that adds text, line, image, and polygon annotations to an XYChart.
  *
  * @author Bruce Schubert
  */
 public class XYAnnotations {
 
+    /**
+     * Defines the foreground and background annotation layers.
+     */
     public enum Layer {
 
         BACKGROUND, FOREGROUND
@@ -54,7 +57,6 @@ public class XYAnnotations {
 
     private final XYChart chart;
     private final ObservableList<Node> chartChildren;
-    private final ObservableList<Node> plotChildren;
     private final Group plotContent;
 
     private final Group background = new Group();
@@ -64,11 +66,15 @@ public class XYAnnotations {
     private final ObservableList<XYAnnotation> bgAnnotations;
 
 
-    public XYAnnotations(XYChart chart, ObservableList<Node> chartChildren,
-        ObservableList<Node> plotChildren) {
+    /**
+     * Constructs an annotation extension object for an XYChart.
+     *
+     * @param chart The chart to which annotations are added.
+     * @param chartChildren The children returned by chart.getChartChildren().
+     */
+    public XYAnnotations(XYChart chart, ObservableList<Node> chartChildren) {
         this.chart = chart;
         this.chartChildren = chartChildren;
-        this.plotChildren = plotChildren;
 
         // The chartChildren contains a plotBackground, plotArea, XAxis and YAxis.
         // Find the plotArea and add our background and foreground on either side 
@@ -98,6 +104,12 @@ public class XYAnnotations {
     }
 
 
+    /**
+     * Adds an annotation to the specified layer.
+     *
+     * @param annotation The annotation to be added, e.g. text, line, image or polygon.
+     * @param layer The foreground or background.
+     */
     public void add(XYAnnotation annotation, Layer layer) {
         Objects.requireNonNull(annotation, getClass().getSimpleName() + ": annotation must not be null");
         if (layer == Layer.FOREGROUND) {
@@ -114,6 +126,12 @@ public class XYAnnotations {
     }
 
 
+    /**
+     * Removes the given annotation from the specified layer.
+     *
+     * @param annotation The annotation to be removed.
+     * @param layer The foreground or background.
+     */
     public void remove(XYAnnotation annotation, Layer layer) {
         Objects.requireNonNull(annotation, getClass().getSimpleName() + ": annotation must not be null");
 
@@ -127,6 +145,11 @@ public class XYAnnotations {
     }
 
 
+    /**
+     * Clears all the annotations from the specified layer.
+     *
+     * @param layer The background or foreground.
+     */
     public void clearAnnotations(Layer layer) {
         Group group = layer == Layer.BACKGROUND ? background : foreground;
         ObservableList<XYAnnotation> collection = (layer == Layer.BACKGROUND) ? bgAnnotations : fgAnnotations;
@@ -136,7 +159,11 @@ public class XYAnnotations {
         collection.clear();
     }
 
-
+    /**
+     * Clears all line annotations from the specified layer.
+     *
+     * @param layer The background or foreground.
+     */
     public void clearLineAnnotations(Layer layer) {
         ArrayList<XYAnnotation> copy = new ArrayList<>(layer == Layer.BACKGROUND ? bgAnnotations : fgAnnotations);
 
@@ -147,7 +174,11 @@ public class XYAnnotations {
         }
     }
 
-
+    /**
+     * Clears all text annotations from the specified layer.
+     *
+     * @param layer The background or foreground.
+     */
     public void clearTextAnnotations(Layer layer) {
         ArrayList<XYAnnotation> copy = new ArrayList<>(layer == Layer.BACKGROUND ? bgAnnotations : fgAnnotations);
 
@@ -158,7 +189,11 @@ public class XYAnnotations {
         }
     }
 
-
+    /**
+     * Clears all polygon annotations from the specified layer.
+     *
+     * @param layer The background or foreground.
+     */
     public void clearPolygonAnnotations(Layer layer) {
         ArrayList<XYAnnotation> copy = new ArrayList<>(layer == Layer.BACKGROUND ? bgAnnotations : fgAnnotations);
 
@@ -169,7 +204,11 @@ public class XYAnnotations {
         }
     }
 
-
+    /**
+     * Clears all image annotations from the specified layer.
+     *
+     * @param layer The background or foreground.
+     */
     public void clearImageAnnotations(Layer layer) {
         ArrayList<XYAnnotation> copy = new ArrayList<>(layer == Layer.BACKGROUND ? bgAnnotations : fgAnnotations);
 
@@ -181,6 +220,9 @@ public class XYAnnotations {
     }
 
 
+    /**
+     * Performs a layout of the background and foreground annotations.
+     */
     public void layoutAnnotations() {
         layoutBackground();
         layoutForeground();
