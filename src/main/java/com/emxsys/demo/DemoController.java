@@ -361,7 +361,7 @@ public class DemoController implements Initializable {
      *
      * @return An enhanced scatter chart.
      */
-    private EnhancedScatterChart createScatterChart() {
+    public static EnhancedScatterChart createScatterChart() {
         NumberAxis xAxis = new NumberAxis("X-Axis (Domain)", 0d, 8.0d, 1.0d);
         NumberAxis yAxis = new NumberAxis("Y-Axis (Range)", 0.0d, 5.0d, 1.0d);
         ObservableList<XYChart.Series> data = FXCollections.observableArrayList(
@@ -390,7 +390,7 @@ public class DemoController implements Initializable {
      *
      * @return An enhanced line chart.
      */
-    public EnhancedLineChart createLineChart() {
+    public static EnhancedLineChart createLineChart() {
         NumberAxis xAxis = new NumberAxis("Values for X-Axis (Domain)", 0, 3, 1);
         NumberAxis yAxis = new NumberAxis("Values for Y-Axis (Range)", 0, 3, 1);
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList(
@@ -422,7 +422,7 @@ public class DemoController implements Initializable {
      *
      * @return An enhanced logarithmic scatter chart.
      */
-    private LogScatterChart createLogScatterChart() {
+    public static LogScatterChart createLogScatterChart() {
         final int NUM_POINTS = 20;
         final double MAX_X = 1000d;
         final double MAX_Y = 100d;
@@ -453,7 +453,7 @@ public class DemoController implements Initializable {
      *
      * @return An enhanced logarithmic line chart.
      */
-    private LogLineChart createLogLineChart() {
+    public static LogLineChart createLogLineChart() {
         final int NUM_POINTS = 20;
         final double MAX_X = 1000d;
         final double MAX_Y = 100d;
