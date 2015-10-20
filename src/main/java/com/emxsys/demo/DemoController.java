@@ -225,7 +225,7 @@ public class DemoController implements Initializable {
                 Image logo = new Image(getClass().getResourceAsStream("/images/emxsys_small_rect.jpg"));
 
                 ((AnnotationExtension) chart).getAnnotations().add(new XYImageAnnotation(
-                    xAxis.getLowerBound(), yAxis.getLowerBound(), logo, Pos.BOTTOM_LEFT), Layer.BACKGROUND);
+                    logo, xAxis.getLowerBound(), yAxis.getLowerBound(), Pos.BOTTOM_LEFT), Layer.BACKGROUND);
 
                 chart.requestLayout();
             }

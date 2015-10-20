@@ -38,6 +38,8 @@ import javafx.scene.layout.AnchorPane;
 
 
 /**
+ * The XYImageAnnotation class draws image annotations on the foreground or background of an
+ * XYChart.
  *
  * @author Bruce Schubert
  */
@@ -52,12 +54,27 @@ public class XYImageAnnotation implements XYAnnotation {
     private Pos imageAnchor;
 
 
-    public XYImageAnnotation(double x, double y, Image image) {
-        this(x, y, image, Pos.TOP_LEFT);
+    /**
+     * Constructs an image annotation anchored at the image's top left corner.
+     *
+     * @param image
+     * @param x
+     * @param y
+     */
+    public XYImageAnnotation(Image image, double x, double y) {
+        this(image, x, y, Pos.TOP_LEFT);
     }
 
 
-    public XYImageAnnotation(double x, double y, Image image, Pos anchor) {
+    /**
+     * Constructs an image annotation anchored at the specified anchor point.
+     *
+     * @param image
+     * @param x
+     * @param y
+     * @param anchor
+     */
+    public XYImageAnnotation(Image image, double x, double y, Pos anchor) {
         this.x = x;
         this.y = y;
         this.displayX = x;
@@ -67,18 +84,32 @@ public class XYImageAnnotation implements XYAnnotation {
         this.imageView.setSmooth(false);
         this.pane.getChildren().add(imageView);
 
+        // Note: these listeners are essential for the correct layout of the node.
+        // During the first layout pass, the width and height of the pane are not
+        // set which causes some of the size based placements to be incorrectly set. 
         this.pane.widthProperty().addListener((observable) -> layoutImage());
         this.pane.heightProperty().addListener((observable) -> layoutImage());
 
     }
 
 
+    /**
+     * Gets the Node representation.
+     *
+     * @return An AnchorPane object containing an ImageView.
+     */
     @Override
     public Node getNode() {
         return pane;
     }
 
 
+    /**
+     * Performs a layout of the image.
+     *
+     * @param xAxis
+     * @param yAxis
+     */
     @Override
     public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
         displayX = xAxis.getDisplayPosition(x);
