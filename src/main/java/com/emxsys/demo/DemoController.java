@@ -425,8 +425,12 @@ public class DemoController implements Initializable {
      */
     public static LogScatterChart createLogScatterChart() {
         final int NUM_POINTS = 20;
+        final double MIN_X = 1d;
         final double MAX_X = 1000d;
+        final double MIN_Y = 1d;
         final double MAX_Y = 100d;
+        final double X_TICK_UNIT = 1d;  // only working value is 1 at this time
+        final double Y_TICK_UNIT = 1d;
         
         // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
@@ -443,8 +447,8 @@ public class DemoController implements Initializable {
         dataset.add(series1);
         
         // Create the chart
-        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", 1d, MAX_X, 1.0d);
-        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", 1.0d, MAX_Y, 1.0d);
+        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", MIN_X, MAX_X, X_TICK_UNIT);
+        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", MIN_Y, MAX_Y, Y_TICK_UNIT);
         LogScatterChart chart = new LogScatterChart(xAxis, yAxis, dataset);
         chart.setTitle("LogScatterChart");
 
@@ -459,26 +463,41 @@ public class DemoController implements Initializable {
      */
     public static LogLineChart createLogLineChart() {
         final int NUM_POINTS = 20;
+        final double MIN_X = 10d;
         final double MAX_X = 1000d;
+        final double MIN_Y = 1d;
         final double MAX_Y = 100d;
-        
+        final double X_TICK_UNIT = 1d;  // only acceptable value is 1 at this time
+        final double Y_TICK_UNIT = 1d;
         // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
         LineChart.Series series1 = new LineChart.Series();
         series1.setName("Log Series 1");
-        double xInterval = Math.log10(MAX_X) / NUM_POINTS;
-        double yInterval = MAX_Y / NUM_POINTS;
-        for (int i = 1; i <= NUM_POINTS; i++) {
+        double yInterval = Math.log10(MAX_Y) / NUM_POINTS;
+        double xInterval = MAX_X / NUM_POINTS;
+        for (int i = 1; i < NUM_POINTS; i++) {
             series1.getData().add(new XYChart.Data(
-                Math.pow(10, i * xInterval),
-                i * yInterval)
+                i * xInterval,
+                Math.pow(10, i * yInterval))
             );
         }
         dataset.add(series1);
         
+        LineChart.Series series2 = new LineChart.Series();
+        series2.setName("Log Series 2");
+        xInterval = Math.log10(MAX_X) / NUM_POINTS;
+        yInterval = Math.log10(MAX_Y) / NUM_POINTS;
+        for (int i = 0; i < NUM_POINTS; i++) {
+            series2.getData().add(new XYChart.Data(
+                Math.pow(10, i * xInterval),
+                Math.pow(10, i * yInterval))
+            );
+        }
+        dataset.add(series2);
+        
         // Create the chart
-        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", 1d, MAX_X, 1.0d);
-        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", 1.0d, MAX_Y, 1.0d);
+        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", MIN_X, MAX_X, X_TICK_UNIT);
+        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", MIN_Y, MAX_Y, Y_TICK_UNIT);
         LogLineChart chart = new LogLineChart(xAxis, yAxis, dataset);
         chart.setTitle("LogLineChart");
 
