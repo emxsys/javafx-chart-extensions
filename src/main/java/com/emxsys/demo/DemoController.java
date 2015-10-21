@@ -53,6 +53,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.ValueAxis;
@@ -362,8 +363,6 @@ public class DemoController implements Initializable {
      * @return An enhanced scatter chart.
      */
     public static EnhancedScatterChart createScatterChart() {
-        NumberAxis xAxis = new NumberAxis("X-Axis (Domain)", 0d, 8.0d, 1.0d);
-        NumberAxis yAxis = new NumberAxis("Y-Axis (Range)", 0.0d, 5.0d, 1.0d);
         ObservableList<XYChart.Series> data = FXCollections.observableArrayList(
             new EnhancedScatterChart.Series("Series 1",
                 FXCollections.<EnhancedScatterChart.Data>observableArrayList(
@@ -379,6 +378,8 @@ public class DemoController implements Initializable {
                     new XYChart.Data(7.8, 4.0)
                 ))
         );
+        NumberAxis xAxis = new NumberAxis("X-Axis (Domain)", 0d, 8.0d, 1.0d);
+        NumberAxis yAxis = new NumberAxis("Y-Axis (Range)", 0.0d, 5.0d, 1.0d);
         EnhancedScatterChart chart = new EnhancedScatterChart(xAxis, yAxis, data);
         chart.setTitle("EnhancedScatterChart");
         return chart;
@@ -391,8 +392,6 @@ public class DemoController implements Initializable {
      * @return An enhanced line chart.
      */
     public static EnhancedLineChart createLineChart() {
-        NumberAxis xAxis = new NumberAxis("Values for X-Axis (Domain)", 0, 3, 1);
-        NumberAxis yAxis = new NumberAxis("Values for Y-Axis (Range)", 0, 3, 1);
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList(
             new EnhancedLineChart.Series<>("Series 1",
                 FXCollections.observableArrayList(
@@ -411,6 +410,8 @@ public class DemoController implements Initializable {
                     new XYChart.Data<>(2.6, 0.9)
                 ))
         );
+        NumberAxis xAxis = new NumberAxis("Values for X-Axis (Domain)", 0, 3, 1);
+        NumberAxis yAxis = new NumberAxis("Values for Y-Axis (Range)", 0, 3, 1);
         EnhancedLineChart chart = new EnhancedLineChart(xAxis, yAxis, lineChartData);
         chart.setTitle("EnhancedLineChart");
         return chart;
@@ -426,10 +427,10 @@ public class DemoController implements Initializable {
         final int NUM_POINTS = 20;
         final double MAX_X = 1000d;
         final double MAX_Y = 100d;
-        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", 1d, MAX_X, 1.0d);
-        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", 1.0d, MAX_Y, 1.0d);
+        
+        // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
-        ScatterChart.Series series1 = new EnhancedScatterChart.Series();
+        ScatterChart.Series series1 = new ScatterChart.Series();
         series1.setName("Log Series 1");
         double xInterval = Math.log10(MAX_X) / NUM_POINTS;
         double yInterval = MAX_Y / NUM_POINTS;
@@ -440,7 +441,10 @@ public class DemoController implements Initializable {
             );
         }
         dataset.add(series1);
-
+        
+        // Create the chart
+        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", 1d, MAX_X, 1.0d);
+        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", 1.0d, MAX_Y, 1.0d);
         LogScatterChart chart = new LogScatterChart(xAxis, yAxis, dataset);
         chart.setTitle("LogScatterChart");
 
@@ -457,10 +461,10 @@ public class DemoController implements Initializable {
         final int NUM_POINTS = 20;
         final double MAX_X = 1000d;
         final double MAX_Y = 100d;
-        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", 1d, MAX_X, 1.0d);
-        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", 1.0d, MAX_Y, 1.0d);
+        
+        // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
-        ScatterChart.Series series1 = new EnhancedScatterChart.Series();
+        LineChart.Series series1 = new LineChart.Series();
         series1.setName("Log Series 1");
         double xInterval = Math.log10(MAX_X) / NUM_POINTS;
         double yInterval = MAX_Y / NUM_POINTS;
@@ -471,6 +475,10 @@ public class DemoController implements Initializable {
             );
         }
         dataset.add(series1);
+        
+        // Create the chart
+        LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", 1d, MAX_X, 1.0d);
+        LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", 1.0d, MAX_Y, 1.0d);
         LogLineChart chart = new LogLineChart(xAxis, yAxis, dataset);
         chart.setTitle("LogLineChart");
 
