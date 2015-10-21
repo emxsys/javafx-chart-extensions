@@ -28,7 +28,7 @@ Also included are several chart types that include the aforementioned functional
 ## How do I get set up? ##
 
 * Review the [JavaFX Chart Extensions Wiki](https://bitbucket.org/emxsys/javafx-chart-extensions/wiki/).
-* [Download](https://bitbucket.org/emxsys/javafx-chart-extensions/downloads) the code, or clone the repository, or [fork the repository](https://bitbucket.org/emxsys/javafx-chart-extensions/fork).
+* [Download the code](https://bitbucket.org/emxsys/javafx-chart-extensions/downloads), or clone the repository, or [fork the repository](https://bitbucket.org/emxsys/javafx-chart-extensions/fork).
 * Compile and run the DemoApp found in the **com.emxsys.demo** package. 
 * Simply add the **com.emxsys.chart** package to your project and include the chart extensions in your charts.
 * Configuration: Maven
