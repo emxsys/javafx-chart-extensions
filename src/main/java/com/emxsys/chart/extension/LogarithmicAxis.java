@@ -80,7 +80,7 @@ public class LogarithmicAxis extends NumericAxis {
      * @param upperBound
      */
     public LogarithmicAxis(double lowerBound, double upperBound) {
-        this(lowerBound, upperBound, 9);
+        this(lowerBound, upperBound, 1);
     }
 
     /**
@@ -92,9 +92,21 @@ public class LogarithmicAxis extends NumericAxis {
      * @param tickUnit The tick unit, ie space between tickmarks
      */
     public LogarithmicAxis(double lowerBound, double upperBound, double tickUnit) {
-        this(null, lowerBound, upperBound, 9);
+        this(null, lowerBound, upperBound, 1);
     }
 
+    /**
+     * Constructs a non-auto-ranging NumberAxis with the given lablel, upper
+     * bound, lower bound.
+     *
+     * @param axisLabel The name to display for this axis
+     * @param lowerBound The lower bound for this axis, ie min plottable value
+     * @param upperBound The upper bound for this axis, ie max plottable value
+     */
+    public LogarithmicAxis(String axisLabel, double lowerBound, double upperBound) {
+        this(axisLabel, lowerBound, upperBound, 1);
+
+    }
     /**
      * Constructs a non-auto-ranging NumberAxis with the given lablel, upper
      * bound, lower bound and tick unit.
