@@ -33,7 +33,7 @@ Also included are several chart types that include the aforementioned functional
 * Simply add the **com.emxsys.chart** package to your project and include the chart extensions in your charts.
 * Configuration: Maven
 * Dependencies: Java8, JavaFX 
-* Original build environment: NetBeans 8.0.2
+* Original developer IDE: NetBeans 8.0.2
 
 ## Contribution guidelines ##
 
