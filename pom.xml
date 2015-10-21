@@ -4,7 +4,7 @@
 
     <groupId>com.emxsys</groupId>
     <artifactId>jfxchartext</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>JavaFX Chart Extensions</name>
@@ -104,5 +104,8 @@
             </plugin>
         </plugins>
     </build>
-
+    <description>The JavaFX Chart Extensions project was created to make porting of JFreeChart-based 
+charts to to JavaFX charts easier. The JFreeChart library is very rich and comprehensive; 
+this project contains several classes that can be added to JavaFX chart derived classes 
+to provide a limited set of JFreeChart-like functionality.</description>
 </project>
