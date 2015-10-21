@@ -20,14 +20,14 @@ set of JFreeChart-like functionality. This functionality includes:
 
 Also included are several chart types that include the aforementioned functionality:
 
-* EnhancedScatterChart: An enhanced version of the ScatterChart with subtitles, markers and annotations.
-* EnhancedLineChart: An enhanced version of the LineChart with subtitles, markers and annotations.
-* LogScatterChart: A version the the EnhancedScatterChart with LogarithmicAxis support.
-* LogLineChart: A version the the EnhancedLineChart with LogarithmicAxis support.
+* **EnhancedScatterChart**: An enhanced version of the ScatterChart with subtitles, markers and annotations.
+* **EnhancedLineChart**: An enhanced version of the LineChart with subtitles, markers and annotations.
+* **LogScatterChart**: A version the the EnhancedScatterChart with LogarithmicAxis support.
+* **LogLineChart**: A version the the EnhancedLineChart with LogarithmicAxis support.
 
 ## How do I get set up? ##
 
-* Review the Wiki.
+* Review the [JavaFX Chart Extensions Wiki](https://emxsys/javafx-chart-extension/wiki).
 * Download the code/repository.
 * Compile and run the DemoApp found in the com.emxsys.demo package. 
 * Simply add the com.emxsys.chart package to your project and include the chart extensions in your charts.
