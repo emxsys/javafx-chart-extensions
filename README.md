@@ -20,19 +20,20 @@ set of JFreeChart-like functionality. This functionality includes:
 
 Also included are several chart types that include the aforementioned functionality:
 
-* EnhancedScatterChart: An enhanced version of the ScatterChart with subtitles, markers and annotations.
-* EnhancedLineChart: An enhanced version of the LineChart with subtitles, markers and annotations.
-* LogScatterChart: A version the the EnhancedScatterChart with LogarithmicAxis support.
-* LogLineChart: A version the the EnhancedLineChart with LogarithmicAxis support.
+* **EnhancedScatterChart**: An enhanced version of the ScatterChart with subtitles, markers and annotations.
+* **EnhancedLineChart**: An enhanced version of the LineChart with subtitles, markers and annotations.
+* **LogScatterChart**: A version the the EnhancedScatterChart with LogarithmicAxis support.
+* **LogLineChart**: A version the the EnhancedLineChart with LogarithmicAxis support.
 
 ## How do I get set up? ##
 
-* Review the Wiki.
-* Download the code/repository.
-* Compile and run the DemoApp found in the com.emxsys.demo package. 
-* Simply add the com.emxsys.chart package to your project and include the chart extensions in your charts.
+* Review the [JavaFX Chart Extensions Wiki](https://bitbucket.org/emxsys/javafx-chart-extensions/wiki/).
+* [Download the code](https://bitbucket.org/emxsys/javafx-chart-extensions/downloads), or clone the repository, or [fork the repository](https://bitbucket.org/emxsys/javafx-chart-extensions/fork).
+* Compile and run the DemoApp found in the **com.emxsys.demo** package. 
+* Simply add the **com.emxsys.chart** package to your project and include the chart extensions in your charts.
 * Configuration: Maven
 * Dependencies: Java8, JavaFX 
+* Original developer IDE: NetBeans 8.0.2
 
 ## Contribution guidelines ##
 
