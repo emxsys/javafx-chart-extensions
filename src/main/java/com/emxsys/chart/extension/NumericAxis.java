@@ -29,8 +29,8 @@
  */
 package com.emxsys.chart.extension;
 
-import com.emxsys.chart.extension.NumberTickUnit;
 import com.sun.javafx.charts.ChartLayoutAnimator;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.KeyFrame;
@@ -44,9 +44,9 @@ import javafx.scene.chart.ValueAxis;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
+
 /**
- * Extensible (non-final) NumericAxis compatible with a JFree-style
- * TickUnitSource.
+ * Extensible (non-final) NumericAxis compatible with a JFree-style TickUnitSource.
  *
  * @author Bruce Schubert
  */
@@ -55,7 +55,9 @@ public class NumericAxis extends ValueAxis<Number> {
     private Object currentAnimationID;
     private final ChartLayoutAnimator animator = new ChartLayoutAnimator(this);
     private TickUnitSource standardTickUnits;
-    TickUnit tickUnit;
+    
+    private NumberTickUnit tickUnit;
+
 
     /**
      * Constructs an auto-ranging number axis.
@@ -64,9 +66,9 @@ public class NumericAxis extends ValueAxis<Number> {
         this.tickUnit = new NumberTickUnit();
     }
 
+
     /**
-     * Constructs a non-auto-ranging number access with the given upper bound,
-     * lower bound,
+     * Constructs a non-auto-ranging number access with the given upper bound, lower bound,
      *
      * @param lowerBound The lower bound for this axis, ie min plottable value
      * @param upperBound The upper bound for this axis, ie max plottable value
@@ -76,9 +78,10 @@ public class NumericAxis extends ValueAxis<Number> {
         this.tickUnit = new NumberTickUnit();
     }
 
+
     /**
-     * Constructs a non-auto-ranging NumberAxis with the given upper bound, lower
-     * bound and tick unit.
+     * Constructs a non-auto-ranging NumberAxis with the given upper bound, lower bound and tick
+     * unit.
      *
      * @param lowerBound The lower bound for this axis, ie min plottable value
      * @param upperBound The upper bound for this axis, ie max plottable value
@@ -89,9 +92,9 @@ public class NumericAxis extends ValueAxis<Number> {
         this.tickUnit = new NumberTickUnit(tickUnit);
     }
 
+
     /**
-     * Create a non-auto-ranging NumberAxis with the given upper bound, lower
-     * bound and tick unit
+     * Create a non-auto-ranging NumberAxis with the given upper bound, lower bound and tick unit
      *
      * @param axisLabel The name to display for this axis
      * @param lowerBound The lower bound for this axis, ie min plottable value
@@ -104,17 +107,28 @@ public class NumericAxis extends ValueAxis<Number> {
         setLabel(axisLabel);
     }
 
+
     public final double getTickUnit() {
         return tickUnit.getSize();
     }
+
+    
+    protected NumberTickUnit getTickUnitImpl() {
+        return tickUnit;
+    }
+
+    public final void setNumberFormatter(NumberFormat formatter) {
+        this.tickUnit.setNumberFormatter(formatter);
+    }
+
 
     public final void setTickUnit(double value) {
         throw new UnsupportedOperationException("setTickUnit");
     }
 
     /**
-     * When true zero is always included in the visible range. This only has
-     * effect if auto-ranging is on.
+     * When true zero is always included in the visible range. This only has effect if auto-ranging
+     * is on.
      */
     private BooleanProperty forceZeroInRange = new BooleanPropertyBase(true) {
         @Override
@@ -126,10 +140,12 @@ public class NumericAxis extends ValueAxis<Number> {
             }
         }
 
+
         @Override
         public Object getBean() {
             return this;
         }
+
 
         @Override
         public String getName() {
@@ -137,13 +153,16 @@ public class NumericAxis extends ValueAxis<Number> {
         }
     };
 
+
     public final boolean isForceZeroInRange() {
         return forceZeroInRange.getValue();
     }
 
+
     public final void setForceZeroInRange(boolean value) {
         forceZeroInRange.setValue(value);
     }
+
 
     public final BooleanProperty forceZeroInRangeProperty() {
         return forceZeroInRange;
@@ -151,23 +170,26 @@ public class NumericAxis extends ValueAxis<Number> {
 
     private Orientation effectiveOrientation;
 
+
     final Side getEffectiveSide() {
         final Side side = getSide();
         if (side == null || (side.isVertical() && effectiveOrientation == Orientation.HORIZONTAL)
-                || side.isHorizontal() && effectiveOrientation == Orientation.VERTICAL) {
+            || side.isHorizontal() && effectiveOrientation == Orientation.VERTICAL) {
             // Means side == null && effectiveOrientation == null produces Side.BOTTOM
             return effectiveOrientation == Orientation.VERTICAL ? Side.LEFT : Side.BOTTOM;
         }
         return side;
     }
 
+
     final void setEffectiveOrientation(Orientation orientation) {
         effectiveOrientation = orientation;
     }
 
+
     /**
-     * Measure the size of the label for given tick mark value. This uses the
-     * font that is set for the tick marks
+     * Measure the size of the label for given tick mark value. This uses the font that is set for
+     * the tick marks
      *
      * @param value tick mark value
      * @param rotation The text rotation
@@ -187,15 +209,14 @@ public class NumericAxis extends ValueAxis<Number> {
         return measureTickMarkLabelSize(labelText, rotation);
     }
 
+
     /**
-     * Called to set the upper and lower bound and anything else that needs to
-     * be auto-ranged
+     * Called to set the upper and lower bound and anything else that needs to be auto-ranged
      *
      * @param minValue The min data value that needs to be plotted on this axis
      * @param maxValue The max data value that needs to be plotted on this axis
      * @param length The length of the axis in display coordinates
-     * @param labelSize The approximate average size a label takes along the
-     * axis
+     * @param labelSize The approximate average size a label takes along the axis
      * @return The calculated range
      */
     @Override
@@ -205,7 +226,8 @@ public class NumericAxis extends ValueAxis<Number> {
         if (isForceZeroInRange()) {
             if (maxValue < 0) {
                 maxValue = 0;
-            } else if (minValue > 0) {
+            }
+            else if (minValue > 0) {
                 minValue = 0;
             }
         }
@@ -247,14 +269,17 @@ public class NumericAxis extends ValueAxis<Number> {
             if (mant > 5d) {
                 exp++;
                 ratio = 1;
-            } else if (mant > 1d) {
+            }
+            else if (mant > 1d) {
                 ratio = mant > 2.5 ? 5 : 2.5;
             }
             if (exp > 1) {
                 formatter = "#,##0";
-            } else if (exp == 1) {
+            }
+            else if (exp == 1) {
                 formatter = "0";
-            } else {
+            }
+            else {
                 final boolean ratioHasFrac = Math.rint(ratio) != ratio;
                 final StringBuilder formatterB = new StringBuilder("0");
                 int n = ratioHasFrac ? Math.abs(exp) + 1 : Math.abs(exp);
@@ -278,10 +303,11 @@ public class NumericAxis extends ValueAxis<Number> {
             count = 0;
             for (double major = minRounded; major <= maxRounded; major += tickUnitRounded, count++) {
                 double size = side.isVertical() ? measureTickMarkSize(major, getTickLabelRotation(), formatter).getHeight()
-                        : measureTickMarkSize(major, getTickLabelRotation(), formatter).getWidth();
+                    : measureTickMarkSize(major, getTickLabelRotation(), formatter).getWidth();
                 if (major == minRounded) { // first
                     last = size / 2;
-                } else {
+                }
+                else {
                     maxReqTickGap = Math.max(maxReqTickGap, last + 6 + (size / 2));
                 }
             }
@@ -304,11 +330,11 @@ public class NumericAxis extends ValueAxis<Number> {
         return new Object[]{minRounded, maxRounded, tickUnitRounded, newScale, formatter};
     }
 
+
     /**
      * Called to get the current axis range.
      *
-     * @return A range object that can be passed to setRange() and
-     * calculateTickValues()
+     * @return A range object that can be passed to setRange() and calculateTickValues()
      */
     @Override
     protected Object getRange() {
@@ -321,9 +347,10 @@ public class NumericAxis extends ValueAxis<Number> {
         };
     }
 
+
     /**
-     * Called to set the current axis range to the given range. If isAnimating()
-     * is true then this method should animate the range to the new range.
+     * Called to set the current axis range to the given range. If isAnimating() is true then this
+     * method should animate the range to the new range.
      *
      * @param range A range object returned from autoRange()
      * @param animate If true animate the change in range
@@ -349,29 +376,30 @@ public class NumericAxis extends ValueAxis<Number> {
         if (animate) {
             animator.stop(currentAnimationID);
             currentAnimationID = animator.animate(
-                    new KeyFrame(Duration.ZERO,
-                            new KeyValue(currentLowerBound, oldLowerBound)//,
-                    //new KeyValue(scalePropertyImpl(), getScale())
-                    ),
-                    new KeyFrame(Duration.millis(700),
-                            new KeyValue(currentLowerBound, newLowerBound)//,
-                    //new KeyValue(scalePropertyImpl(), newScale)
-                    )
+                new KeyFrame(Duration.ZERO,
+                    new KeyValue(currentLowerBound, oldLowerBound)//,
+                //new KeyValue(scalePropertyImpl(), getScale())
+                ),
+                new KeyFrame(Duration.millis(700),
+                    new KeyValue(currentLowerBound, newLowerBound)//,
+                //new KeyValue(scalePropertyImpl(), newScale)
+                )
             );
             setScale(newScale);
-        } else {
+        }
+        else {
             currentLowerBound.set(newLowerBound);
             setScale(newScale);
         }
     }
+
 
     /**
      * Calculate a list of all the data values for each tick mark in range
      *
      * @param length The length of the axis in display units
      * @param range A range object returned from autoRange()
-     * @return A list of tick marks that fit along the axis if it was the given
-     * length
+     * @return A list of tick marks that fit along the axis if it was the given length
      */
     @Override
     protected List<Number> calculateTickValues(double length, Object range) {
@@ -382,16 +410,19 @@ public class NumericAxis extends ValueAxis<Number> {
         List<Number> tickValues = new ArrayList<>();
         if (lowerBound == upperBound) {
             tickValues.add(lowerBound);
-        } else if (tickUnit <= 0) {
+        }
+        else if (tickUnit <= 0) {
             tickValues.add(lowerBound);
             tickValues.add(upperBound);
-        } else if (tickUnit > 0) {
+        }
+        else if (tickUnit > 0) {
             tickValues.add(lowerBound);
             if (((upperBound - lowerBound) / tickUnit) > 2000) {
                 // This is a ridiculous amount of major tick marks, something has probably gone wrong
                 System.err.println("Warning we tried to create more than 2000 major tick marks on a NumberAxis. "
-                        + "Lower Bound=" + lowerBound + ", Upper Bound=" + upperBound + ", Tick Unit=" + tickUnit);
-            } else {
+                    + "Lower Bound=" + lowerBound + ", Upper Bound=" + upperBound + ", Tick Unit=" + tickUnit);
+            }
+            else {
                 if (lowerBound + tickUnit < upperBound) {
                     // If tickUnit is integer, start with the nearest integer
                     double first = Math.rint(tickUnit) == tickUnit ? Math.ceil(lowerBound) : lowerBound + tickUnit;
@@ -404,6 +435,7 @@ public class NumericAxis extends ValueAxis<Number> {
         }
         return tickValues;
     }
+
 
     /**
      * Calculate a list of the data values for every minor tick mark
@@ -425,14 +457,14 @@ public class NumericAxis extends ValueAxis<Number> {
             if (((upperBound - lowerBound) / minorUnit) > 10000) {
                 // This is a ridiculous amount of major tick marks, something has probably gone wrong
                 System.err.println("Warning we tried to create more than 10000 minor tick marks on a NumberAxis. "
-                        + "Lower Bound=" + this.getLowerBound() + ", Upper Bound=" + this.getUpperBound() + ", Tick Unit=" + tickUnitSize);
+                    + "Lower Bound=" + this.getLowerBound() + ", Upper Bound=" + this.getUpperBound() + ", Tick Unit=" + tickUnitSize);
                 return minorTickMarks;
             }
             final boolean tickUnitIsInteger = Math.rint(tickUnitSize) == tickUnitSize;
             if (tickUnitIsInteger) {
                 for (double minor = Math.floor(lowerBound) + minorUnit;
-                        minor < Math.ceil(lowerBound);
-                        minor += minorUnit) {
+                    minor < Math.ceil(lowerBound);
+                    minor += minorUnit) {
                     if (minor > lowerBound) {
                         minorTickMarks.add(minor);
                     }
@@ -448,6 +480,7 @@ public class NumericAxis extends ValueAxis<Number> {
         }
         return minorTickMarks;
     }
+
 
     @Override
     protected String getTickMarkLabel(Number t) {

@@ -33,11 +33,11 @@
 
 .chart-major-vertical-grid-lines {
     -fx-stroke: #dddddd;
-    -fx-stroke-width: 1.5;
+    -fx-stroke-width: 1.0;
 }
 
 .chart-major-horizontal-grid-lines {
     -fx-stroke: #dddddd;
-    -fx-stroke-width: 1.5;
+    -fx-stroke-width: 1.0;
 }
 

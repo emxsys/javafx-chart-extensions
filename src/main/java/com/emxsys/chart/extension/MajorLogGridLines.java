@@ -29,7 +29,6 @@
  */
 package com.emxsys.chart.extension;
 
-import java.util.Iterator;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -40,6 +39,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 
+
 /**
  * Major grid line support for logarithmic charts.
  *
@@ -47,18 +47,23 @@ import javafx.scene.shape.Rectangle;
  * @param <X>
  * @param <Y>
  */
-public class MajorLogGridLines<X,Y> {
-
+public class MajorLogGridLines<X, Y> {
+    
     private Group plotArea = null;
-    // References to XYChart grid lines
-    private Path horzGridLines = null;
-    private Path vertGridLines = null;
+    
     // Major log grid lines added to XYChart
-    private Path majorHorzGridLines = new Path();
-    private Path majorVertGridLines = new Path();
-    private final XYChart<X,Y> chart;
+    private final Path majorHorzGridLines = new Path();
+    private final Path majorVertGridLines = new Path();
+    private final XYChart<X, Y> chart;
 
-    public MajorLogGridLines(XYChart<X,Y> chart, ObservableList<Node> chartChildren) {
+
+    /**
+     * Constructs the 'major' logarithmic grid lines for an XYChart.
+     *
+     * @param chart The chart desiring major grid lines.
+     * @param chartChildren The children returned by chart.getChartChildren().
+     */
+    public MajorLogGridLines(XYChart<X, Y> chart, ObservableList<Node> chartChildren) {
         this.chart = chart;
         
         majorHorzGridLines.getStyleClass().setAll("chart-major-horizontal-grid-lines");
@@ -66,45 +71,30 @@ public class MajorLogGridLines<X,Y> {
 
         // Find the gridlines contained in the plotArea of the XYChart.
         // The chart children include in the following order:
-        //  plotBackground
-        //  plotArea
-        //  xAxis
-        //  yAxis
-        Iterator<Node> chartIt = chartChildren.iterator();
-        while (chartIt.hasNext() && plotArea == null) {
+        //  0: plotBackground
+        //  1: plotArea
+        //  2: xAxis
+        //  3: yAxis
+        plotArea = (Group) chartChildren.get(1);
+        
+        // Monitor the plotArea's clip rectangle to detect changes that require a layout.
+        // This is essential for drawing the gridlines during the scene's initial layout.
+        Rectangle plotAreaClip = (Rectangle) plotArea.getClip();
+        plotAreaClip.widthProperty().addListener((observable) -> layoutGridlines());
+        plotAreaClip.heightProperty().addListener((observable) -> layoutGridlines());
+        
+        // Insert our custom background annotations before the normal grid liens (indices 2 and 3).
+        // The normal gridlines will draw on top of the major grid lines.
+        ObservableList<Node> plotAreaChildren = plotArea.getChildren();
+        plotAreaChildren.add(2, majorHorzGridLines);
+        plotAreaChildren.add(2, majorVertGridLines);
 
-            Node chartChild = chartIt.next();
-
-            // Find the "plotArea" which is a Group instance
-            if (chartChild instanceof Group) {
-
-                plotArea = (Group) chartChild;
-                // Insert our custom background annotations after the zero lines (indices 0 and 1). 
-                ObservableList<Node> plotAreaChildren = plotArea.getChildren();
-                plotAreaChildren.add(2, majorHorzGridLines);
-                plotAreaChildren.add(2, majorVertGridLines);
-
-                // Obtain references to the factory "grid lines" which are Path instances
-                for (Node plotAreaChild : plotAreaChildren) {
-                    if (plotAreaChild instanceof Path) {
-
-                        // We can identify the horizontal and vertical grid lines by the CSS.
-                        ObservableList<String> styles = plotAreaChild.getStyleClass();
-
-                        if (horzGridLines == null && styles.contains("chart-horizontal-grid-lines")) {
-                            horzGridLines = (Path) plotAreaChild;
-                        } else if (vertGridLines == null && styles.contains("chart-vertical-grid-lines")) {
-                            vertGridLines = (Path) plotAreaChild;
-                        }
-                        if (horzGridLines != null && vertGridLines != null) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
-    
+
+
+    /**
+     * Performs a layout of the grid lines.
+     */
     public void layoutGridlines() {
         
         final Rectangle clip = (Rectangle) plotArea.getClip();
@@ -116,9 +106,8 @@ public class MajorLogGridLines<X,Y> {
         double yAxisHeight = ya.getHeight();
         double epsilon = 0.0001;
         majorVertGridLines.getElements().clear();
-        if (vertGridLines != null && chart.getVerticalGridLinesVisible()) {
+        if (chart.getVerticalGridLinesVisible()) {
             if (xa instanceof LogarithmicAxis) {
-                // Move the major grid lines from the default Path to our custom Path
                 final ObservableList<Axis.TickMark<X>> tickMarks = xa.getTickMarks();
                 for (int i = 0; i < tickMarks.size(); i++) {
                     Axis.TickMark<X> tick = tickMarks.get(i);
@@ -138,9 +127,8 @@ public class MajorLogGridLines<X,Y> {
             }
         }
         majorHorzGridLines.getElements().clear();
-        if (horzGridLines != null && chart.isHorizontalGridLinesVisible()) {
+        if (chart.isHorizontalGridLinesVisible()) {
             if (ya instanceof LogarithmicAxis) {
-                // Move the major grid lines from the default Path to our custom Path
                 final ObservableList<Axis.TickMark<Y>> tickMarks = ya.getTickMarks();
                 for (int i = 0; i < tickMarks.size(); i++) {
                     Axis.TickMark<Y> tick = tickMarks.get(i);
@@ -158,5 +146,5 @@ public class MajorLogGridLines<X,Y> {
             }
         }
     }
-
+    
 }

@@ -39,7 +39,7 @@ import java.text.NumberFormat;
  */
 public class NumberTickUnit extends TickUnit {
 
-    private final DecimalFormat defaultFormatter = new DecimalFormat("0.00");
+    private final DecimalFormat defaultFormatter = new DecimalFormat("0");
     private NumberFormat formatter;
 
 
@@ -59,6 +59,9 @@ public class NumberTickUnit extends TickUnit {
         this.formatter = formatter;
     }
 
+    public void setNumberFormatter(NumberFormat formatter) {
+        this.formatter = formatter;
+    }
 
     /**
      * Get the string label name for a tick mark with the given value
