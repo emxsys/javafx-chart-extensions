@@ -29,7 +29,7 @@
  */
 package com.emxsys.chart;
 
-import com.emxsys.chart.extension.MajorLogGridLines;
+import com.emxsys.chart.extension.MajorLogGridlinesX;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,7 +46,7 @@ import javafx.scene.chart.Axis;
  */
 public class LogLineChart<X, Y> extends EnhancedLineChart<X, Y> {
 
-    private MajorLogGridLines<X, Y> gridlines;
+    private MajorLogGridlinesX<X, Y> gridlines;
 
 
     /**
@@ -70,7 +70,7 @@ public class LogLineChart<X, Y> extends EnhancedLineChart<X, Y> {
     public LogLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis,
         @NamedArg("data") ObservableList<Series<X, Y>> data) {
         super(xAxis, yAxis, data);
-        this.gridlines = new MajorLogGridLines<>(this, this.getChartChildren());
+        this.gridlines = new MajorLogGridlinesX<>(this, this.getChartChildren());
         this.requestChartLayout();
     }
 
