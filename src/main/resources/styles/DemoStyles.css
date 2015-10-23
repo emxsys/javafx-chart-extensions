@@ -2,3 +2,17 @@
 .chart-plot-background {
     -fx-background-color: white;
 }
+
+.chart-subtitle {
+    -fx-font-size: 1.2em;
+}
+
+.chart-marker-line {
+    -fx-stroke-width: 0.5;
+    -fx-stroke: #0000ff;
+}
+
+.chart-annotation-text {
+    -fx-font-size: 2.0em;
+    -fx-text-alignment: center;    
+}

@@ -344,9 +344,11 @@ public class DemoController implements Initializable {
                 avgX = totalX / numItems;
                 avgY = totalY / numItems;
 
-                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Min: %1$.1f", minY), Pos.TOP_LEFT));
+                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Min: %1$.1f", minY), Pos.TOP_RIGHT));
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, String.format("Series 1 Avg: %1$.1f", avgY), Pos.TOP_CENTER));
-                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Max: %1$.1f", maxY), Pos.BOTTOM_RIGHT));
+                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Max: %1$.1f", maxY), Pos.BOTTOM_LEFT));
+                
+                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "Fixed", Pos.BOTTOM_RIGHT));
             }
             else {
                 ((MarkerExtension) chart).getMarkers().clearDomainMarkers();
@@ -381,7 +383,7 @@ public class DemoController implements Initializable {
         NumberAxis xAxis = new NumberAxis("X-Axis (Domain)", 0d, 8.0d, 1.0d);
         NumberAxis yAxis = new NumberAxis("Y-Axis (Range)", 0.0d, 5.0d, 1.0d);
         EnhancedScatterChart chart = new EnhancedScatterChart(xAxis, yAxis, data);
-        chart.setTitle("EnhancedScatterChart");
+        chart.setTitle("Scatter Chart");
         return chart;
     }
 
@@ -413,7 +415,7 @@ public class DemoController implements Initializable {
         NumberAxis xAxis = new NumberAxis("Values for X-Axis (Domain)", 0, 3, 1);
         NumberAxis yAxis = new NumberAxis("Values for Y-Axis (Range)", 0, 3, 1);
         EnhancedLineChart chart = new EnhancedLineChart(xAxis, yAxis, lineChartData);
-        chart.setTitle("EnhancedLineChart");
+        chart.setTitle("Line Chart");
         return chart;
     }
 
@@ -435,7 +437,7 @@ public class DemoController implements Initializable {
         // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
         ScatterChart.Series series1 = new ScatterChart.Series();
-        series1.setName("Log Series 1");
+        series1.setName("Series 1");
         double xInterval = Math.log10(MAX_X) / NUM_POINTS;
         double yInterval = MAX_Y / NUM_POINTS;
         for (int i = 1; i <= NUM_POINTS; i++) {
@@ -450,7 +452,7 @@ public class DemoController implements Initializable {
         LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", MIN_X, MAX_X, X_TICK_UNIT);
         LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", MIN_Y, MAX_Y, Y_TICK_UNIT);
         LogScatterChart chart = new LogScatterChart(xAxis, yAxis, dataset);
-        chart.setTitle("LogScatterChart");
+        chart.setTitle("Logarithmic Scatter Chart");
 
         return chart;
     }
@@ -472,7 +474,7 @@ public class DemoController implements Initializable {
         // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
         LineChart.Series series1 = new LineChart.Series();
-        series1.setName("Log Series 1");
+        series1.setName("Series 1");
         double yInterval = Math.log10(MAX_Y) / NUM_POINTS;
         double xInterval = MAX_X / NUM_POINTS;
         for (int i = 1; i < NUM_POINTS; i++) {
@@ -484,7 +486,7 @@ public class DemoController implements Initializable {
         dataset.add(series1);
         
         LineChart.Series series2 = new LineChart.Series();
-        series2.setName("Log Series 2");
+        series2.setName("Series 2");
         xInterval = Math.log10(MAX_X) / NUM_POINTS;
         yInterval = Math.log10(MAX_Y) / NUM_POINTS;
         for (int i = 0; i < NUM_POINTS; i++) {
@@ -499,7 +501,7 @@ public class DemoController implements Initializable {
         LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", MIN_X, MAX_X, X_TICK_UNIT);
         LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", MIN_Y, MAX_Y, Y_TICK_UNIT);
         LogLineChart chart = new LogLineChart(xAxis, yAxis, dataset);
-        chart.setTitle("LogLineChart");
+        chart.setTitle("Logarithmic Line Chart");
 
         return chart;
     }

@@ -167,7 +167,7 @@ public final class XYMarkers<X, Y> {
         ValueAxis xAxis = (ValueAxis) chart.getXAxis();
         ValueAxis yAxis = (ValueAxis) chart.getYAxis();
         for (ValueMarker marker : domainMarkers) {
-            marker.layoutRangeMarker(xAxis, yAxis);
+            marker.layoutDomainMarker(xAxis, yAxis);
         }
     }
 
