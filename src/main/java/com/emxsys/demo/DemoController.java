@@ -344,11 +344,13 @@ public class DemoController implements Initializable {
                 avgX = totalX / numItems;
                 avgY = totalY / numItems;
 
-                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Min: %1$.1f", minY), Pos.TOP_RIGHT));
+                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Min: %1$.1f", maxY), Pos.TOP_RIGHT));
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, String.format("Series 1 Avg: %1$.1f", avgY), Pos.TOP_CENTER));
-                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Max: %1$.1f", maxY), Pos.BOTTOM_LEFT));
-                
-                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "Fixed", Pos.BOTTOM_RIGHT));
+                ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Max: %1$.1f", minY), Pos.BOTTOM_LEFT));
+                // HACK: A bug in the domain marker places the label opposite end of the specified Pos
+                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "Fixed", Pos.TOP_RIGHT));
+//                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "TOP_RIGHT", Pos.TOP_RIGHT));
+//                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "BOTTOM_LEFT", Pos.BOTTOM_LEFT));
             }
             else {
                 ((MarkerExtension) chart).getMarkers().clearDomainMarkers();

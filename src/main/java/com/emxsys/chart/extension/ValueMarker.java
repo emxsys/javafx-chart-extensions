@@ -242,12 +242,12 @@ public class ValueMarker {
             case TOP_LEFT:
             case CENTER_LEFT:
             case BOTTOM_LEFT:
-                label.setLayoutX(line.getEndX() - label.getWidth());
+                label.setLayoutX(line.getStartX());
                 break;
             case TOP_RIGHT:
             case CENTER_RIGHT:
             case BOTTOM_RIGHT:
-                label.setLayoutX(line.getStartX());
+                label.setLayoutX(line.getEndX() - label.getWidth());
                 break;
             default:
                 throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
@@ -261,12 +261,12 @@ public class ValueMarker {
             case TOP_LEFT:
             case TOP_CENTER:
             case TOP_RIGHT:
-                label.setLayoutY(line.getEndY());
+                label.setLayoutY(line.getStartY() - label.getHeight());
                 break;
             case BOTTOM_LEFT:
             case BOTTOM_CENTER:
             case BOTTOM_RIGHT:
-                label.setLayoutY(line.getStartY() - label.getHeight());
+                label.setLayoutY(line.getEndY());
                 break;
             default:
                 throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
