@@ -35,6 +35,7 @@ import com.emxsys.chart.extension.Subtitle;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYMarkers;
+import java.util.List;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,7 +50,7 @@ import javafx.scene.chart.LineChart;
  * @param <Y>
  */
 public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
-        implements SubtitleExtension, MarkerExtension,  AnnotationExtension  {
+        implements SubtitleExtension, MarkerExtension, AnnotationExtension {
 
     private Subtitle subtitle;
     private XYMarkers<X, Y> markers;
@@ -68,9 +69,14 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
         annotations = new XYAnnotations(this, getChartChildren());
     }
 
+    /**
+     * Gets a copy of the subtitle strings.
+     *
+     * @return A list of subtitles.
+     */
     @Override
-    public String getSubtitle() {
-        return this.subtitle.getSubtitle();
+    public List<String> getSubtitles() {
+        return this.subtitle.getSubtitles();
     }
 
     /**
@@ -78,9 +84,14 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
      * @param subtitle Subtitle text; may be null.
      */
     @Override
-    public void setSubtitle(String subtitle) {
-        this.subtitle.setSubtitle(subtitle);
+    public void addSubtitle(String subtitle) {
+        this.subtitle.addSubtitle(subtitle);
         this.requestLayout();
+    }
+
+    @Override
+    public void clearSubtitles() {
+        this.subtitle.clearSubtitles();
     }
 
     @Override
