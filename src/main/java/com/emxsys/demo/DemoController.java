@@ -66,10 +66,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
-
 /**
  * FXML controller class for the JavaFX Chart Extensions DemoApp.
- * 
+ *
  * @author Bruce Schubert
  */
 public class DemoController implements Initializable {
@@ -79,7 +78,7 @@ public class DemoController implements Initializable {
 
     @FXML
     private ToggleGroup chartGroup;
-    
+
     @FXML
     private CheckBox cbSubtitles;
 
@@ -99,7 +98,6 @@ public class DemoController implements Initializable {
     private CheckBox cbPolygonAnnotations;
 
     private XYChart chart;
-
 
     /**
      * Initializer called by the FXML loader.
@@ -171,7 +169,6 @@ public class DemoController implements Initializable {
         });
     }
 
-
     /**
      * Shows a subtitle.
      *
@@ -179,13 +176,18 @@ public class DemoController implements Initializable {
      */
     private void showSubtitle(Boolean enabled) {
         if (chart instanceof SubtitleExtension) {
-            ((SubtitleExtension) chart).setSubtitle(enabled ? "Subtitle goes here" : null);
+            if (enabled) {
+                ((SubtitleExtension) chart).addSubtitle("First Subtitle");
+                ((SubtitleExtension) chart).addSubtitle("2nd Subtitle");
+            } else {
+                ((SubtitleExtension) chart).clearSubtitles();
+            }
         }
     }
 
-
     /**
-     * Shows a red line annotation on the background layer from the upper left to the lower right.
+     * Shows a red line annotation on the background layer from the upper left
+     * to the lower right.
      *
      * @param enabled Shows a line annotation if true.
      */
@@ -196,23 +198,21 @@ public class DemoController implements Initializable {
                 ValueAxis xAxis = (ValueAxis) chart.getXAxis();
                 ValueAxis yAxis = (ValueAxis) chart.getYAxis();
                 ((AnnotationExtension) chart).getAnnotations().add(new XYLineAnnotation(
-                    xAxis.getUpperBound(), yAxis.getLowerBound(),
-                    xAxis.getLowerBound(), yAxis.getUpperBound(),
-                    2.0,
-                    Color.RED),
-                    Layer.BACKGROUND);
+                        xAxis.getUpperBound(), yAxis.getLowerBound(),
+                        xAxis.getLowerBound(), yAxis.getUpperBound(),
+                        2.0,
+                        Color.RED),
+                        Layer.BACKGROUND);
                 chart.requestLayout();
-            }
-            else {
+            } else {
                 ((AnnotationExtension) chart).getAnnotations().clearLineAnnotations(Layer.BACKGROUND);
             }
         }
     }
 
-
     /**
-     * Shows the Emxsys logo on the background layer at the chart's origin and anchored to the
-     * image's bottom left corner.
+     * Shows the Emxsys logo on the background layer at the chart's origin and
+     * anchored to the image's bottom left corner.
      *
      * @param enabled Shows the image if true.
      */
@@ -226,21 +226,19 @@ public class DemoController implements Initializable {
                 Image logo = new Image(getClass().getResourceAsStream("/images/emxsys_small_rect.jpg"));
 
                 ((AnnotationExtension) chart).getAnnotations().add(new XYImageAnnotation(
-                    logo, xAxis.getLowerBound(), yAxis.getLowerBound(), Pos.BOTTOM_LEFT), Layer.BACKGROUND);
+                        logo, xAxis.getLowerBound(), yAxis.getLowerBound(), Pos.BOTTOM_LEFT), Layer.BACKGROUND);
 
                 chart.requestLayout();
-            }
-            else {
+            } else {
                 ((AnnotationExtension) chart).getAnnotations().clearImageAnnotations(Layer.BACKGROUND);
             }
         }
     }
 
-
     /**
-     * Shows text on the background layer at the upper left, and anchored to the label's top left
-     * corner; and text on the foreground layer at the lower right, and anchored to the label's
-     * bottom right corner.
+     * Shows text on the background layer at the upper left, and anchored to the
+     * label's top left corner; and text on the foreground layer at the lower
+     * right, and anchored to the label's bottom right corner.
      *
      * @param enabled Shows the text labels if true.
      */
@@ -251,26 +249,24 @@ public class DemoController implements Initializable {
                 ValueAxis yAxis = (ValueAxis) chart.getYAxis();
 
                 ((AnnotationExtension) chart).getAnnotations().add(new XYTextAnnotation(
-                    "Text on Background", xAxis.getLowerBound(), yAxis.getUpperBound(), Pos.TOP_LEFT),
-                    Layer.BACKGROUND);
+                        "Text on Background", xAxis.getLowerBound(), yAxis.getUpperBound(), Pos.TOP_LEFT),
+                        Layer.BACKGROUND);
 
                 ((AnnotationExtension) chart).getAnnotations().add(new XYTextAnnotation(
-                    "Text on Foreground", xAxis.getUpperBound(), yAxis.getLowerBound(), Pos.BOTTOM_RIGHT),
-                    Layer.FOREGROUND);
+                        "Text on Foreground", xAxis.getUpperBound(), yAxis.getLowerBound(), Pos.BOTTOM_RIGHT),
+                        Layer.FOREGROUND);
 
                 chart.requestLayout();
-            }
-            else {
+            } else {
                 ((AnnotationExtension) chart).getAnnotations().clearTextAnnotations(Layer.BACKGROUND);
                 ((AnnotationExtension) chart).getAnnotations().clearTextAnnotations(Layer.FOREGROUND);
             }
         }
     }
 
-
     /**
-     * Shows a solid orange polygon on the background layer, and a translucent green polygon on the
-     * foreground layer; both polygons have a black border.
+     * Shows a solid orange polygon on the background layer, and a translucent
+     * green polygon on the foreground layer; both polygons have a black border.
      *
      * @param enabled Shows the two polygons if true;
      */
@@ -284,29 +280,27 @@ public class DemoController implements Initializable {
                     xAxis.getLowerBound(), yAxis.getLowerBound(),
                     xAxis.getUpperBound(), yAxis.getUpperBound(),
                     xAxis.getLowerBound(), yAxis.getUpperBound()},
-                    2.0,
-                    Color.BLACK,
-                    Color.DARKORANGE),
-                    Layer.BACKGROUND);
+                        2.0,
+                        Color.BLACK,
+                        Color.DARKORANGE),
+                        Layer.BACKGROUND);
 
                 ((AnnotationExtension) chart).getAnnotations().add(new XYPolygonAnnotation(new double[]{
                     xAxis.getLowerBound(), yAxis.getLowerBound(),
                     xAxis.getUpperBound(), yAxis.getUpperBound(),
                     xAxis.getUpperBound(), yAxis.getLowerBound()},
-                    2.0,
-                    Color.BLACK,
-                    new Color(0, 1, 0, 0.3)),
-                    Layer.FOREGROUND);
+                        2.0,
+                        Color.BLACK,
+                        new Color(0, 1, 0, 0.3)),
+                        Layer.FOREGROUND);
 
                 chart.requestLayout();
-            }
-            else {
+            } else {
                 ((AnnotationExtension) chart).getAnnotations().clearPolygonAnnotations(Layer.BACKGROUND);
                 ((AnnotationExtension) chart).getAnnotations().clearPolygonAnnotations(Layer.FOREGROUND);
             }
         }
     }
-
 
     /**
      * Shows the min, max and average value markers for series #1.
@@ -351,15 +345,13 @@ public class DemoController implements Initializable {
                 ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "Fixed", Pos.TOP_RIGHT));
 //                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "TOP_RIGHT", Pos.TOP_RIGHT));
 //                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "BOTTOM_LEFT", Pos.BOTTOM_LEFT));
-            }
-            else {
+            } else {
                 ((MarkerExtension) chart).getMarkers().clearDomainMarkers();
                 ((MarkerExtension) chart).getMarkers().clearRangeMarkers();
             }
         }
 
     }
-
 
     /**
      * Creates a scatter chart that includes the JavaFX Chart Extensions.
@@ -368,19 +360,19 @@ public class DemoController implements Initializable {
      */
     public static EnhancedScatterChart createScatterChart() {
         ObservableList<XYChart.Series> data = FXCollections.observableArrayList(
-            new EnhancedScatterChart.Series("Series 1",
-                FXCollections.<EnhancedScatterChart.Data>observableArrayList(
-                    new XYChart.Data(0.2, 3.5),
-                    new XYChart.Data(0.7, 4.6),
-                    new XYChart.Data(1.8, 1.7),
-                    new XYChart.Data(2.1, 2.8),
-                    new XYChart.Data(4.0, 2.2),
-                    new XYChart.Data(4.1, 2.6),
-                    new XYChart.Data(4.5, 2.0),
-                    new XYChart.Data(6.0, 3.0),
-                    new XYChart.Data(7.0, 2.0),
-                    new XYChart.Data(7.8, 4.0)
-                ))
+                new EnhancedScatterChart.Series("Series 1",
+                        FXCollections.<EnhancedScatterChart.Data>observableArrayList(
+                                new XYChart.Data(0.2, 3.5),
+                                new XYChart.Data(0.7, 4.6),
+                                new XYChart.Data(1.8, 1.7),
+                                new XYChart.Data(2.1, 2.8),
+                                new XYChart.Data(4.0, 2.2),
+                                new XYChart.Data(4.1, 2.6),
+                                new XYChart.Data(4.5, 2.0),
+                                new XYChart.Data(6.0, 3.0),
+                                new XYChart.Data(7.0, 2.0),
+                                new XYChart.Data(7.8, 4.0)
+                        ))
         );
         NumberAxis xAxis = new NumberAxis("X-Axis (Domain)", 0d, 8.0d, 1.0d);
         NumberAxis yAxis = new NumberAxis("Y-Axis (Range)", 0.0d, 5.0d, 1.0d);
@@ -389,7 +381,6 @@ public class DemoController implements Initializable {
         return chart;
     }
 
-
     /**
      * Creates a line chart that includes the JavaFX Chart Extensions.
      *
@@ -397,22 +388,22 @@ public class DemoController implements Initializable {
      */
     public static EnhancedLineChart createLineChart() {
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList(
-            new EnhancedLineChart.Series<>("Series 1",
-                FXCollections.observableArrayList(
-                    new XYChart.Data<>(0.0, 1.0),
-                    new XYChart.Data<>(1.2, 1.4),
-                    new XYChart.Data<>(2.2, 1.9),
-                    new XYChart.Data<>(2.7, 2.3),
-                    new XYChart.Data<>(2.9, 0.5)
-                )),
-            new EnhancedLineChart.Series<>("Series 2",
-                FXCollections.observableArrayList(
-                    new XYChart.Data<>(0.0, 1.6),
-                    new XYChart.Data<>(0.8, 0.4),
-                    new XYChart.Data<>(1.4, 2.9),
-                    new XYChart.Data<>(2.1, 1.3),
-                    new XYChart.Data<>(2.6, 0.9)
-                ))
+                new EnhancedLineChart.Series<>("Series 1",
+                        FXCollections.observableArrayList(
+                                new XYChart.Data<>(0.0, 1.0),
+                                new XYChart.Data<>(1.2, 1.4),
+                                new XYChart.Data<>(2.2, 1.9),
+                                new XYChart.Data<>(2.7, 2.3),
+                                new XYChart.Data<>(2.9, 0.5)
+                        )),
+                new EnhancedLineChart.Series<>("Series 2",
+                        FXCollections.observableArrayList(
+                                new XYChart.Data<>(0.0, 1.6),
+                                new XYChart.Data<>(0.8, 0.4),
+                                new XYChart.Data<>(1.4, 2.9),
+                                new XYChart.Data<>(2.1, 1.3),
+                                new XYChart.Data<>(2.6, 0.9)
+                        ))
         );
         NumberAxis xAxis = new NumberAxis("Values for X-Axis (Domain)", 0, 3, 1);
         NumberAxis yAxis = new NumberAxis("Values for Y-Axis (Range)", 0, 3, 1);
@@ -421,9 +412,9 @@ public class DemoController implements Initializable {
         return chart;
     }
 
-
     /**
-     * Creates a logarithmic scatter chart that includes the JavaFX Chart Extensions.
+     * Creates a logarithmic scatter chart that includes the JavaFX Chart
+     * Extensions.
      *
      * @return An enhanced logarithmic scatter chart.
      */
@@ -435,7 +426,7 @@ public class DemoController implements Initializable {
         final double MAX_Y = 100d;
         final double X_TICK_UNIT = 1d;  // only working value is 1 at this time
         final double Y_TICK_UNIT = 1d;
-        
+
         // Create the dataset
         ObservableList<XYChart.Series> dataset = FXCollections.observableArrayList();
         ScatterChart.Series series1 = new ScatterChart.Series();
@@ -444,12 +435,12 @@ public class DemoController implements Initializable {
         double yInterval = MAX_Y / NUM_POINTS;
         for (int i = 1; i <= NUM_POINTS; i++) {
             series1.getData().add(new XYChart.Data(
-                Math.pow(10, i * xInterval),
-                i * yInterval)
+                    Math.pow(10, i * xInterval),
+                    i * yInterval)
             );
         }
         dataset.add(series1);
-        
+
         // Create the chart
         LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", MIN_X, MAX_X, X_TICK_UNIT);
         LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", MIN_Y, MAX_Y, Y_TICK_UNIT);
@@ -459,9 +450,9 @@ public class DemoController implements Initializable {
         return chart;
     }
 
-
     /**
-     * Creates a logarithmic line chart that includes the JavaFX Chart Extensions.
+     * Creates a logarithmic line chart that includes the JavaFX Chart
+     * Extensions.
      *
      * @return An enhanced logarithmic line chart.
      */
@@ -481,24 +472,24 @@ public class DemoController implements Initializable {
         double xInterval = MAX_X / NUM_POINTS;
         for (int i = 1; i < NUM_POINTS; i++) {
             series1.getData().add(new XYChart.Data(
-                i * xInterval,
-                Math.pow(10, i * yInterval))
+                    i * xInterval,
+                    Math.pow(10, i * yInterval))
             );
         }
         dataset.add(series1);
-        
+
         LineChart.Series series2 = new LineChart.Series();
         series2.setName("Series 2");
         xInterval = Math.log10(MAX_X) / NUM_POINTS;
         yInterval = Math.log10(MAX_Y) / NUM_POINTS;
         for (int i = 0; i < NUM_POINTS; i++) {
             series2.getData().add(new XYChart.Data(
-                Math.pow(10, i * xInterval),
-                Math.pow(10, i * yInterval))
+                    Math.pow(10, i * xInterval),
+                    Math.pow(10, i * yInterval))
             );
         }
         dataset.add(series2);
-        
+
         // Create the chart
         LogarithmicAxis xAxis = new LogarithmicAxis("X-Axis (Domain)", MIN_X, MAX_X, X_TICK_UNIT);
         LogarithmicAxis yAxis = new LogarithmicAxis("Y-Axis (Range)", MIN_Y, MAX_Y, Y_TICK_UNIT);
@@ -508,10 +499,9 @@ public class DemoController implements Initializable {
         return chart;
     }
 
-
     /**
-     * Sets the anchors to 0 for all fours sides of the child node so that it conforms to the
-     * parent's size.
+     * Sets the anchors to 0 for all fours sides of the child node so that it
+     * conforms to the parent's size.
      *
      * @param child Node to have the anchors set.
      * @return The modified child node.
