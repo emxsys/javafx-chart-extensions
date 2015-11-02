@@ -29,6 +29,13 @@
  */
 package com.emxsys.chart.extension;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -38,7 +45,7 @@ import javafx.scene.layout.Pane;
 
 /**
  * The Subtitle class adds the subtitle capability to a JavaFX chart.
- * 
+ *
  * @author Bruce Schubert
  */
 public class Subtitle {
@@ -47,6 +54,7 @@ public class Subtitle {
     private final ObservableList<Node> children;
 
     private String subtitle;
+    private final LinkedHashMap<String, Label> subtitles = new LinkedHashMap<>();
     private final Label subtitleLabel = new Label();
     private final Label titleLabel;
     private final Pane chartContent;
@@ -75,31 +83,51 @@ public class Subtitle {
         this.legend = legend;
     }
 
-    public String getSubtitle() {
-        return this.subtitle;
+    public List<String> getSubtitles() {
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(this.subtitles.keySet());
+        return list;
     }
 
     /**
-     * 
-     * @param subtitle 
+     * Adds a subtitle to a chart. Subtitles are displayed in the order they are
+     * inserted.
+     *
+     * @param subtitle Subtitle text.
      */
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-        this.subtitleLabel.setText(subtitle);
+    public void addSubtitle(String subtitle) {
+        if (Objects.isNull(subtitle) || subtitle.isEmpty()) {
+            throw new IllegalArgumentException("subtitle text cannot be null or empty.");
+        }
+        Label label = new Label(subtitle);
+        label.getStyleClass().add("chart-subtitle");
+        label.setAlignment(Pos.CENTER);
+        this.subtitles.put(subtitle, label);
+        this.children.add(label);
         this.chart.requestLayout();
     }
 
     /**
-     * 
+     * Removes all the subtitles from the chart.
+     */
+    public void clearSubtitles() {
+        this.subtitles.values().stream().forEach((label) -> {
+            this.children.remove(label);
+        });
+        this.subtitles.clear();
+    }
+
+    /**
+     * Lays out the subtitles.
      */
     public void layoutSubtitles() {
 
-        if (subtitle == null || subtitle.isEmpty()) {
-            subtitleLabel.setVisible(false);
+        if (subtitles.isEmpty()) {
             return;
         }
-        subtitleLabel.setVisible(true);
+        //subtitleLabel.setVisible(true);
 
+        // Get the current layout coordinates
         double top = titleLabel.getLayoutY() + titleLabel.getHeight();
         double left = chart.snappedLeftInset();
         double bottom = chart.snappedBottomInset();
@@ -107,17 +135,24 @@ public class Subtitle {
         final double width = chart.getWidth();
         final double height = chart.getHeight();
 
+        Collection<Label> labels = subtitles.values();
+
         switch (chart.getTitleSide()) {
             case TOP: {
-                final double subtitleHeight = (subtitleLabel.prefHeight(width - left - right));
-                subtitleLabel.resizeRelocate(left, top, width - left - right, subtitleHeight);
-                // Resize the chart content to accomdate the subtitle
-                top += subtitleHeight;
+                double subtitlesHeight = 0;
+                for (Label label : labels) {
+                    final double labelHeight = (label.prefHeight(width - left - right));
+                    final double labelTop = top + subtitlesHeight;
+                    label.resizeRelocate(left, labelTop, width - left - right, labelHeight);
+                    subtitlesHeight += labelHeight;
+                }
+                // Resize the chart content to accomdate the subtitles
+                top += subtitlesHeight;
                 chartContent.resizeRelocate(
                         chartContent.getLayoutX(),
-                        chartContent.getLayoutY() + subtitleHeight,
+                        chartContent.getLayoutY() + subtitlesHeight,
                         chartContent.getWidth(),
-                        chartContent.getHeight() - subtitleHeight);
+                        chartContent.getHeight() - subtitlesHeight);
                 break;
             }
             case BOTTOM: {

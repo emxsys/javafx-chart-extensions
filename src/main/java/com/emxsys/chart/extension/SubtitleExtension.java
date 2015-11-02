@@ -29,28 +29,35 @@
  */
 package com.emxsys.chart.extension;
 
+import java.util.List;
 
 /**
- * The SubtitleExtenstion interface defines the subtitle capabilities added to an enhanced chart
- * type.
+ * The SubtitleExtenstion interface defines the subtitle capabilities added to
+ * an enhanced chart type.
  *
  * @author Bruce Schubert
  */
 public interface SubtitleExtension {
 
     /**
-     * Gets the subtile text.
+     * Gets a copy of the subtile collection.
      *
-     * @return The current text.
+     * @return A list of the subtitle strings.
      */
-    String getSubtitle();
-
+    List<String> getSubtitles();
 
     /**
-     * Sets the subtitle text.
+     * Add a subtitle to the chart. Subtitles are displayed in the order they
+     * are inserted.
      *
-     * @param subtitle The new text.
+     * @param subtitle The subtitle text.
      */
-    void setSubtitle(String subtitle);
+    void addSubtitle(String subtitle);
+
+    /**
+     * Removes all of the subtitles.
+     *
+     */
+    void clearSubtitles();
 
 }

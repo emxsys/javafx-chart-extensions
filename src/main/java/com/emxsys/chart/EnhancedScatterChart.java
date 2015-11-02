@@ -35,12 +35,12 @@ import com.emxsys.chart.extension.Subtitle;
 import com.emxsys.chart.extension.SubtitleExtension;
 import com.emxsys.chart.extension.XYAnnotations;
 import com.emxsys.chart.extension.XYMarkers;
+import java.util.List;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.ScatterChart;
-
 
 /**
  * An enhanced version of a ScatterChart.
@@ -50,58 +50,65 @@ import javafx.scene.chart.ScatterChart;
  * @param <Y>
  */
 public class EnhancedScatterChart<X, Y> extends ScatterChart<X, Y>
-    implements SubtitleExtension, MarkerExtension, AnnotationExtension {
+        implements SubtitleExtension, MarkerExtension, AnnotationExtension {
 
     private Subtitle subtitle;
     private XYMarkers<X, Y> markers;
     private XYAnnotations annotations;
 
-
     public EnhancedScatterChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
     }
 
-
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public EnhancedScatterChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis,
-        @NamedArg("data") ObservableList<Series<X, Y>> data) {
+            @NamedArg("data") ObservableList<Series<X, Y>> data) {
         super(xAxis, yAxis, data);
         subtitle = new Subtitle(this, getChildren(), getLegend());
         markers = new XYMarkers<>(this, getPlotChildren());
         annotations = new XYAnnotations(this, getChartChildren());
     }
 
-
+    /**
+     * Gets a copy of the subtitle strings.
+     *
+     * @return A list of subtitles.
+     */
     @Override
-    public String getSubtitle() {
-        return this.subtitle.getSubtitle();
+    public List<String> getSubtitles() {
+        return this.subtitle.getSubtitles();
     }
 
-
+    /**
+     *
+     * @param subtitle Subtitle text; may be null.
+     */
     @Override
-    public void setSubtitle(String subtitle) {
-        this.subtitle.setSubtitle(subtitle);
+    public void addSubtitle(String subtitle) {
+        this.subtitle.addSubtitle(subtitle);
+        this.requestLayout();
     }
 
+    @Override
+    public void clearSubtitles() {
+        this.subtitle.clearSubtitles();
+    }
 
     @Override
     public XYAnnotations getAnnotations() {
         return this.annotations;
     }
 
-
     @Override
     public XYMarkers getMarkers() {
         return this.markers;
     }
-
 
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
         subtitle.layoutSubtitles();
     }
-
 
     @Override
     protected void layoutPlotChildren() {
