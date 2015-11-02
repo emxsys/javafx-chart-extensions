@@ -178,7 +178,7 @@ public class DemoController implements Initializable {
         if (chart instanceof SubtitleExtension) {
             if (enabled) {
                 ((SubtitleExtension) chart).addSubtitle("First Subtitle");
-                ((SubtitleExtension) chart).addSubtitle("2nd Subtitle");
+                ((SubtitleExtension) chart).addSubtitle("Another Subtitle");
             } else {
                 ((SubtitleExtension) chart).clearSubtitles();
             }
@@ -341,10 +341,7 @@ public class DemoController implements Initializable {
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Series 1 Min: %1$.1f", maxY), Pos.TOP_RIGHT));
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(avgY, String.format("Series 1 Avg: %1$.1f", avgY), Pos.TOP_CENTER));
                 ((MarkerExtension) chart).getMarkers().addRangeMarker(new ValueMarker(minY, String.format("Series 1 Max: %1$.1f", minY), Pos.BOTTOM_LEFT));
-                // HACK: A bug in the domain marker places the label opposite end of the specified Pos
-                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "Fixed", Pos.TOP_RIGHT));
-//                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "TOP_RIGHT", Pos.TOP_RIGHT));
-//                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "BOTTOM_LEFT", Pos.BOTTOM_LEFT));
+                ((MarkerExtension) chart).getMarkers().addDomainMarker(new ValueMarker(3, "Fixed", Pos.BOTTOM_RIGHT));
             } else {
                 ((MarkerExtension) chart).getMarkers().clearDomainMarkers();
                 ((MarkerExtension) chart).getMarkers().clearRangeMarkers();

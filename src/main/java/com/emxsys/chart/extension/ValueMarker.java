@@ -37,11 +37,11 @@ import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
 
-
 /**
- * A JavaFX Chart Extension class that highlights a value on an XYChart's X (domain) or Y (range)
- * axis. The value is highlighted with a line through the value with an optional label. ValueMarkers
- * are added to an XYMarkers object. For example:
+ * A JavaFX Chart Extension class that highlights a value on an XYChart's X
+ * (domain) or Y (range) axis. The value is highlighted with a line through the
+ * value with an optional label. ValueMarkers are added to an XYMarkers object.
+ * For example:
  * <pre>{@code
  * EnhancedScatterChart chart = new EnhancedScatterChart(xAxis, yAxis, dataset);
  * double maxX;
@@ -61,6 +61,10 @@ public class ValueMarker {
     private final Label label = new Label();
     private Pos textAnchor = Pos.TOP_LEFT;
 
+    private enum MarkerType {
+        DOMAIN, RANGE
+    };
+    private MarkerType markerType = MarkerType.RANGE;
 
     /**
      * Constructs a marker line drawn at the given value.
@@ -71,10 +75,9 @@ public class ValueMarker {
         this(value, null);
     }
 
-
     /**
-     * Constructs a marker line and label drawn at the given value. The label will be anchored at
-     * its top left corner.
+     * Constructs a marker line and label drawn at the given value. The label
+     * will be anchored at its top left corner.
      *
      * @param value The value to be highlighted.
      * @param text The text to display on the line.
@@ -83,15 +86,15 @@ public class ValueMarker {
         this(value, text, Pos.TOP_LEFT);
     }
 
-
     /**
      * Constructs a marker line and label drawn at the given value .
      *
      * @param value The value to be highlighted.
      * @param text The label text to be displayed on the line.
-     * @param textAnchor The anchor point defining where the label should be placed relative to the
-     * value. Valid values include: TOP_LEFT, TOP_RIGHT, TOP_CENTER, CENTER_LEFT, CENTER_RIGHT,
-     * CENTER, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_CENTER
+     * @param textAnchor The anchor point defining where the label should be
+     * placed relative to the value. Valid values include: TOP_LEFT, TOP_RIGHT,
+     * TOP_CENTER, CENTER_LEFT, CENTER_RIGHT, CENTER, BOTTOM_LEFT, BOTTOM_RIGHT,
+     * BOTTOM_CENTER
      */
     public ValueMarker(double value, String text, Pos textAnchor) {
         this.value.set(value);
@@ -110,7 +113,6 @@ public class ValueMarker {
         this.group.getChildren().addAll(line, label);
     }
 
-
     /**
      * Gets the marker value.
      *
@@ -119,7 +121,6 @@ public class ValueMarker {
     public double getValue() {
         return value.get();
     }
-
 
     /**
      * Sets the marker value and hence placement on the chart.
@@ -130,11 +131,9 @@ public class ValueMarker {
         this.value.set(value);
     }
 
-
     public DoubleProperty valueProperty() {
         return value;
     }
-
 
     /**
      * Gets the optional label text.
@@ -145,7 +144,6 @@ public class ValueMarker {
         return label.getText();
     }
 
-
     /**
      * Sets the optional label text.
      *
@@ -154,7 +152,6 @@ public class ValueMarker {
     public void setLabel(String text) {
         label.setText(text);
     }
-
 
     /**
      * Gets the current node.
@@ -165,7 +162,6 @@ public class ValueMarker {
         return group;
     }
 
-
     /**
      * Gets the anchor that defines where the text will be placed.
      *
@@ -174,7 +170,6 @@ public class ValueMarker {
     public Pos getTextAnchor() {
         return textAnchor;
     }
-
 
     /**
      * Sets the anchor that defines where the text will be placed.
@@ -185,7 +180,6 @@ public class ValueMarker {
         this.textAnchor = textAnchor;
     }
 
-
     /**
      * Lays out this marker on the X (domain) axis.
      *
@@ -193,7 +187,6 @@ public class ValueMarker {
      * @param yAxis The chart's Y axis.
      */
     public void layoutDomainMarker(ValueAxis xAxis, ValueAxis yAxis) {
-
         // Determine the line height
         double lower = yAxis.getLowerBound();
         Number lowerY = yAxis.toRealValue(lower);
@@ -205,9 +198,9 @@ public class ValueMarker {
         line.setStartX(xAxis.getDisplayPosition(getValue()));
         line.setEndX(line.getStartX());
         // Layout the text base on the line
+        markerType = MarkerType.DOMAIN;
         layoutText();
     }
-
 
     /**
      * Lays out this marker on the Y (range) axis.
@@ -216,7 +209,6 @@ public class ValueMarker {
      * @param yAxis The chart's Y axis.
      */
     public void layoutRangeMarker(ValueAxis xAxis, ValueAxis yAxis) {
-
         // Determine the line width
         double lower = xAxis.getLowerBound();
         Number lowerX = xAxis.toRealValue(lower);
@@ -228,11 +220,12 @@ public class ValueMarker {
         line.setStartY(yAxis.getDisplayPosition(getValue()));
         line.setEndY(line.getStartY());
         // Layout the text based on the line placement
+        markerType = MarkerType.RANGE;
         layoutText();
     }
 
-
     protected void layoutText() {
+        // Determine X coordinate
         switch (textAnchor) {
             case TOP_CENTER:
             case CENTER:
@@ -242,16 +235,29 @@ public class ValueMarker {
             case TOP_LEFT:
             case CENTER_LEFT:
             case BOTTOM_LEFT:
-                label.setLayoutX(line.getStartX());
+                if (markerType == MarkerType.RANGE) {
+                    // Place the range marker text at the left side of the chart
+                    label.setLayoutX(line.getStartX());
+                } else {
+                    // Place the domain marker text on the left side of the line
+                    label.setLayoutX(line.getStartX() - label.getWidth());
+                }
                 break;
             case TOP_RIGHT:
             case CENTER_RIGHT:
             case BOTTOM_RIGHT:
-                label.setLayoutX(line.getEndX() - label.getWidth());
+                if (markerType == MarkerType.RANGE) {
+                    // Place the range marker text at the right side of the chart
+                    label.setLayoutX(line.getEndX() - label.getWidth());
+                } else {
+                    // Place the domain marker text on the right side of the line
+                    label.setLayoutX(line.getStartX());
+                }
                 break;
             default:
                 throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
         }
+        // Determine Y coordinate
         switch (textAnchor) {
             case CENTER:
             case CENTER_LEFT:
@@ -261,15 +267,28 @@ public class ValueMarker {
             case TOP_LEFT:
             case TOP_CENTER:
             case TOP_RIGHT:
-                label.setLayoutY(line.getStartY() - label.getHeight());
+                if (markerType == MarkerType.RANGE) {
+                    // Place the range marker text above the line
+                    label.setLayoutY(line.getStartY() - label.getHeight());
+                } else {
+                    // Place the domain marker text at the top of the chart
+                    label.setLayoutY(line.getEndY());
+                }
                 break;
             case BOTTOM_LEFT:
             case BOTTOM_CENTER:
             case BOTTOM_RIGHT:
-                label.setLayoutY(line.getEndY());
+                if (markerType == MarkerType.RANGE) {
+                    // Place the range marker text below the line
+                    label.setLayoutY(line.getEndY());
+                } else {
+                    // Place the range marker text at the bottom of the chart
+                    label.setLayoutY(line.getStartY() - label.getHeight());
+                }
                 break;
             default:
                 throw new IllegalStateException(getClass().getSimpleName() + ": " + textAnchor.name() + " is not supported.");
+
         }
     }
 
