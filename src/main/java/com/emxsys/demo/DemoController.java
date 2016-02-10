@@ -12,7 +12,7 @@
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *
- *     - Neither the name of Bruce Schubert, Emxsys nor the names of its 
+ *     - Neither the name of Bruce Schubert, Emxsys nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -33,16 +33,9 @@ import com.emxsys.chart.EnhancedLineChart;
 import com.emxsys.chart.EnhancedScatterChart;
 import com.emxsys.chart.LogLineChart;
 import com.emxsys.chart.LogScatterChart;
-import com.emxsys.chart.extension.AnnotationExtension;
-import com.emxsys.chart.extension.LogarithmicAxis;
-import com.emxsys.chart.extension.MarkerExtension;
-import com.emxsys.chart.extension.SubtitleExtension;
-import com.emxsys.chart.extension.ValueMarker;
+import com.emxsys.chart.extension.*;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
-import com.emxsys.chart.extension.XYImageAnnotation;
-import com.emxsys.chart.extension.XYLineAnnotation;
-import com.emxsys.chart.extension.XYPolygonAnnotation;
-import com.emxsys.chart.extension.XYTextAnnotation;
+
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -51,6 +44,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
@@ -97,6 +91,9 @@ public class DemoController implements Initializable {
     @FXML
     private CheckBox cbPolygonAnnotations;
 
+    @FXML
+    private CheckBox cbFieldAnnotations;
+
     private XYChart chart;
 
     /**
@@ -136,6 +133,7 @@ public class DemoController implements Initializable {
             // Show the selected extensions
             showSubtitle(cbSubtitles.isSelected());
             initPolygonAnnotations(cbPolygonAnnotations.isSelected());
+            initFieldAnnotations(cbFieldAnnotations.isSelected());
             showImageAnnotations(cbImageAnnotations.isSelected());
             showLineAnnotations(cbLineAnnotations.isSelected());
             showTextAnnotations(cbTextAnnotations.isSelected());
@@ -162,6 +160,10 @@ public class DemoController implements Initializable {
         // Handle Polygon Annotation checkbox
         cbPolygonAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             initPolygonAnnotations(newValue);
+        });
+        // Handle Field Annotation checkbox
+        cbFieldAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            initFieldAnnotations(newValue);
         });
         // Handle Image Annotation checkbox
         cbImageAnnotations.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -298,6 +300,35 @@ public class DemoController implements Initializable {
             } else {
                 ((AnnotationExtension) chart).getAnnotations().clearPolygonAnnotations(Layer.BACKGROUND);
                 ((AnnotationExtension) chart).getAnnotations().clearPolygonAnnotations(Layer.FOREGROUND);
+            }
+        }
+    }
+
+    /**
+     * Shows a solid orange horizontal field background layer, and a translucent
+     * green vertical field on the foreground layer.
+     *
+     * @param enabled Shows the two polygons if true;
+     */
+    private void initFieldAnnotations(Boolean enabled) {
+        if (chart instanceof AnnotationExtension) {
+            if (enabled) {
+                ((AnnotationExtension) chart).getAnnotations().add(new XYFieldAnnotation(1, 2, Orientation.HORIZONTAL,
+                                                                                         0,
+                                                                                         null,
+                                                                                         Color.DARKORANGE),
+                                                                   Layer.BACKGROUND);
+
+                ((AnnotationExtension) chart).getAnnotations().add(new XYFieldAnnotation(2, 3, Orientation.VERTICAL,
+                                                                                           0,
+                                                                                           null,
+                                                                                           new Color(0, 1, 0, 0.3)),
+                                                                   Layer.FOREGROUND);
+
+                chart.requestLayout();
+            } else {
+                ((AnnotationExtension) chart).getAnnotations().clearFieldAnnotations(Layer.BACKGROUND);
+                ((AnnotationExtension) chart).getAnnotations().clearFieldAnnotations(Layer.FOREGROUND);
             }
         }
     }
