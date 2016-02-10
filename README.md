@@ -16,6 +16,7 @@ set of JFreeChart-like functionality. This functionality includes:
 * XYLineAnnotations
 * XYImageAnnotations
 * XYPolygonAnnotations
+* XYFieldAnnotations
 * LogarithmicAxis
 
 Also included are several chart types that include the aforementioned functionality:
