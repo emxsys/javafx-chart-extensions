@@ -46,6 +46,7 @@
                                           <CheckBox fx:id="cbSubtitles" mnemonicParsing="false" text="Subtitles" />
                                           <CheckBox fx:id="cbMarkers" mnemonicParsing="false" text="Markers" />
                                           <CheckBox fx:id="cbPolygonAnnotations" mnemonicParsing="false" text="Polygon Annotations" />
+                                          <CheckBox fx:id="cbFieldAnnotations" mnemonicParsing="false" text="Field Annotations" />
                                           <CheckBox fx:id="cbImageAnnotations" mnemonicParsing="false" text="Image Annotations" />
                                           <CheckBox fx:id="cbLineAnnotations" mnemonicParsing="false" text="Line Annotations" />
                                           <CheckBox fx:id="cbTextAnnotations" mnemonicParsing="false" text="Text Annotations" />
