@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="javafx-chart-extensions:jar">
+    <output-path>$PROJECT_DIR$/build/classes/artifacts/javafx_chart_extensions_jar</output-path>
+    <root id="archive" name="chart-extensions.jar">
+      <element id="module-output" name="javafx-chart-extensions2" />
+    </root>
+  </artifact>
+</component>

@@ -12,7 +12,7 @@
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *
- *     - Neither the name of Bruce Schubert,  nor the names of its 
+ *     - Neither the name of Bruce Schubert,  nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -77,7 +77,7 @@ public class XYAnnotations {
         this.chartChildren = chartChildren;
 
         // The chartChildren contains a plotBackground, plotArea, XAxis and YAxis.
-        // Find the plotArea and add our background and foreground on either side 
+        // Find the plotArea and add our background and foreground on either side
         // of the plotContent, which is the last item in the plotArea.
         Group plotArea = (Group) chartChildren.get(1);
         int plotContentIndex = plotArea.getChildren().size() - 1;
@@ -199,6 +199,21 @@ public class XYAnnotations {
 
         for (XYAnnotation annotation : copy) {
             if (annotation instanceof XYPolygonAnnotation) {
+                remove(annotation, layer);
+            }
+        }
+    }
+
+    /**
+     * Clears all field annotations from the specified layer.
+     *
+     * @param layer The background or foreground.
+     */
+    public void clearFieldAnnotations(Layer layer) {
+        ArrayList<XYAnnotation> copy = new ArrayList<>(layer == Layer.BACKGROUND ? bgAnnotations : fgAnnotations);
+
+        for (XYAnnotation annotation : copy) {
+            if (annotation instanceof XYFieldAnnotation) {
                 remove(annotation, layer);
             }
         }
