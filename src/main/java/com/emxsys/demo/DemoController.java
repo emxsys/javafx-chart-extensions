@@ -313,17 +313,13 @@ public class DemoController implements Initializable {
     private void initFieldAnnotations(Boolean enabled) {
         if (chart instanceof AnnotationExtension) {
             if (enabled) {
-                ((AnnotationExtension) chart).getAnnotations().add(new XYFieldAnnotation(1, 2, Orientation.HORIZONTAL,
-                                                                                         0,
-                                                                                         null,
-                                                                                         Color.DARKORANGE),
-                                                                   Layer.BACKGROUND);
+                ((AnnotationExtension) chart).getAnnotations().add(
+                        new XYFieldAnnotation(1, 2, Orientation.HORIZONTAL, 0, null, Color.DARKORANGE),
+                        Layer.BACKGROUND);
 
-                ((AnnotationExtension) chart).getAnnotations().add(new XYFieldAnnotation(2, 3, Orientation.VERTICAL,
-                                                                                           0,
-                                                                                           null,
-                                                                                           new Color(0, 1, 0, 0.3)),
-                                                                   Layer.FOREGROUND);
+                ((AnnotationExtension) chart).getAnnotations().add(
+                        new XYFieldAnnotation(2, 3, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.3)),
+                        Layer.FOREGROUND);
 
                 chart.requestLayout();
             } else {
